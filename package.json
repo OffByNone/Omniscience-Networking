@@ -1,30 +1,34 @@
 {
-  "name": "omnisciencehttpserver",
-  "version": "0.5.0",
-  "description": "Http Server For Omniscience",
-  "main": "./bin/index.js",
-  "author": "OffByNone",
-  "license": "MIT",
-  "homepage": "https://github.com/offbynone/omniscienceutilities",
-  "bugs": {
-    "url": "https://github.com/offbynone/omniscienceutilities/issues",
-    "email": "offbynone@outlook.com"
-  },
-  "keywords": [
-    "omniscience"
-  ],
-  "engines": {
-    "Firefox": ">=38.0a1",
-    "Fennec": ">=38.0a1"
-  },
-  "devDependencies": {
-    "babel": "^5.5.8",
-    "eslint": "^0.23.0",
-    "jasmine": "^2.3.1",
-    "jpm": "^1.0.0"
-  },
-  "dependencies": {
-    "omniscience-sdk-resolver": "^0.5.0",
-    "omniscience-utilities": "^0.6.2"
-  }
+	"name": "omniscience-http-server",
+	"version": "0.5.1",
+	"description": "Http Server For Omniscience",
+	"main": "./bin/index.js",
+	"author": "OffByNone",
+	"license": "MIT",
+	"homepage": "https://github.com/offbynone/omniscience-http-server",
+	"bugs": {
+		"url": "https://github.com/offbynone/omniscienceu-http-server/issues",
+		"email": "offbynone@outlook.com"
+	},
+	"keywords": [
+		"omniscience"
+	],
+	"engines": {
+		"Firefox": ">=38.0a1",
+		"Fennec": ">=38.0a1"
+	},
+	"devDependencies": {
+		"babel": "^5.5.8",
+		"eslint": "^0.23.0",
+		"jasmine": "^2.3.1",
+		"jpm": "^1.0.0"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git://github.com/offbynone/omniscience-http-server.git"
+	},
+	"dependencies": {
+		"omniscience-sdk-resolver": "^0.5.0",
+		"omniscience-utilities": "^0.6.2"
+	}
 }
