@@ -4,15 +4,16 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-var HttpServer = require('./lib/HttpServer');
-var HttpResponder = require('./lib/HttpResponder');
-var HttpRequestParser = require('./lib/HttpRequestParser');
-var NetworkingUtils = require('./lib/NetworkingUtils');
-var SocketSender = require('./lib/SocketSender');
-var FileResponder = require('./lib/FileResponder');
-var Constants = require('./lib/Constants');
+var FileSharer = require('./FileSharer');
+var HttpServer = require('./HttpServer');
+var HttpResponder = require('./HttpResponder');
+var HttpRequestParser = require('./HttpRequestParser');
+var NetworkingUtils = require('./NetworkingUtils');
+var SocketSender = require('./SocketSender');
+var FileResponder = require('./FileResponder');
+var Constants = require('./Constants');
 
-var utils = require('omniscienceutilities');
+var utils = require('omniscience-utilities');
 
 var CompositionRoot = (function () {
 	function CompositionRoot(sdk) {
@@ -25,6 +26,11 @@ var CompositionRoot = (function () {
 		key: 'createHttpServer',
 		value: function createHttpServer() {
 			return new HttpServer(this._sdk.createTCPSocket(), utils.createUrlProvider(), new HttpResponder(NetworkingUtils, new SocketSender()), new HttpRequestParser(NetworkingUtils), this._sdk.timers(), new FileResponder(this._sdk.FileUtilities, new HttpResponder(NetworkingUtils, new SocketSender()), NetworkingUtils, new SocketSender()));
+		}
+	}, {
+		key: 'createFileSharer',
+		value: function createFileSharer(httpServer) {
+			return new FileSharer(httpServer, utils.createUrlProvider, utils.MD5());
 		}
 	}]);
 

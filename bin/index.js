@@ -1,6 +1,6 @@
 "use strict";
 
-var SdkResolver = require("./lib/SdkResolver");
+var SdkResolver = require("omniscience-sdk-resolver");
 var CompositionRoot = require("./CompositionRoot");
 
 var sdkResolver = new SdkResolver();

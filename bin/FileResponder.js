@@ -4,7 +4,7 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-var Constants = require('../Utilities/Constants');
+var Constants = require('./Constants');
 
 var FileResponder = (function () {
     function FileResponder(fileUtils, httpResponder, networkingUtils, socketSender) {
