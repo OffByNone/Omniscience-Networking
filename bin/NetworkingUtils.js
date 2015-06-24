@@ -6,10 +6,15 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 module.exports = {
     toByteArray: function toByteArray(strToConvert) {
-        if (!strToConvert) return null;
-        return new Uint8Array([].map.call(strToConvert, function (i) {
-            return i.charCodeAt(0);
-        }));
+        var length = (strToConvert || "").length;
+        var arrayBuffer = new ArrayBuffer(length);
+        var uint8Array = new Uint8Array(arrayBuffer);
+
+        for (var i = 0; i < length; i++) uint8Array[i] = strToConvert.charCodeAt(i);
+
+        return uint8Array;
+        //if (!strToConvert) return null;
+        //return new Uint8Array([].map.call(strToConvert, i => i.charCodeAt(0)));
     },
     toBuffer: function toBuffer(stringOrByteArray) {
         if (typeof stringOrByteArray === "string") return this.toByteArray(stringOrByteArray).buffer;
