@@ -23,6 +23,8 @@ module.exports = {
 		code: 206,
 		reason: 'Partial Content'
 	},
+	connectionKeepAlive: 'keep-alive',
+	connectionClose: 'close',
 	httpVersion: 'HTTP/1.1',
 	serverName: 'omniscience-server-0.2.0',
 	serverTimeoutInMilliseconds: 5000,

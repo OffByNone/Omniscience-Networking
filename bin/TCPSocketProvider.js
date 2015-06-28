@@ -4,27 +4,21 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var FileSharer = (function () {
-    function FileSharer(httpServer, urlProvider, md5) {
-        _classCallCheck(this, FileSharer);
+var TCPSocketProvider = (function () {
+	function TCPSocketProvider(tcpSocketCreator) {
+		_classCallCheck(this, TCPSocketProvider);
 
-        this._server = httpServer;
-        this._urlProvider = urlProvider;
-        this._md5 = md5;
-    }
+		this._tcpSocketCreator = tcpSocketCreator;
+	}
 
-    _createClass(FileSharer, [{
-        key: "shareFile",
-        value: function shareFile(file) {
-            var filePathHash = this._md5(file.path);
-            var filePath = "/" + filePathHash + "/" + file.name;
-            var encodedFilePath = encodeURI(filePath);
+	_createClass(TCPSocketProvider, [{
+		key: "createTCPSocket",
+		value: function createTCPSocket() {
+			return this._tcpSocketCreator();
+		}
+	}]);
 
-            if (file.isLocal || !this._urlProvider.isValidUri(file.path)) return this._server.registerFile(encodedFilePath, file.path);else return file.path;
-        }
-    }]);
-
-    return FileSharer;
+	return TCPSocketProvider;
 })();
 
-module.exports = FileSharer;
+module.exports = TCPSocketProvider;

@@ -36,25 +36,9 @@ var HttpServer = (function () {
 
 			this.socket.onconnect = function (incomingSocket) {
 				_this._requestParser.parseRequest(incomingSocket, function (request) {
-					var timeout = _this._timer.setTimeout(function () {
-						if (incomingSocket.readyState === 'open') //todo: check for ready state change, listen for close and remove timeout handler
-							_this._httpResponder.sendTimeoutResponse(incomingSocket);
-					}, Constants.serverTimeoutInMilliseconds);
-
-					if (_this._registeredPaths.hasOwnProperty(request.path)) {
-						_this._registeredPaths[request.path](request);
-						return;
-					}
-
-					if (_this._registeredFiles.hasOwnProperty(request.path)) {
-						_this._fileResponder.sendResponse(request, _this._registeredFiles[request.path]);
-						return;
-					}
-
-					_this._httpResponder.sendFileNotFoundResponse(incomingSocket);
+					return _this._handleRequest(incomingSocket, request);
 				}, function (error) {
-					if (incomingSocket.readyState === 'open') _this._httpResponder.sendErrorResponse(incomingSocket);
-					console.warn('bad request received');
+					return _this._handleError(incomingSocket, error);
 				});
 			};
 
@@ -71,6 +55,34 @@ var HttpServer = (function () {
 		key: '_getRandomPort',
 		value: function _getRandomPort() {
 			return Math.floor(Math.random() * (65535 - 10000)) + 10000;
+		}
+	}, {
+		key: '_handleRequest',
+		value: function _handleRequest(incomingSocket, request) {
+			var _this2 = this;
+
+			var timeout = this._timer.setTimeout(function () {
+				if (incomingSocket.readyState === 'open') //todo: check for ready state change, listen for close and remove timeout handler
+					_this2._httpResponder.sendTimeoutResponse(incomingSocket);
+			}, Constants.serverTimeoutInMilliseconds);
+
+			if (this._registeredPaths.hasOwnProperty(request.path)) {
+				this._registeredPaths[request.path](request);
+				return;
+			}
+
+			if (this._registeredFiles.hasOwnProperty(request.path)) {
+				this._fileResponder.sendResponse(request, this._registeredFiles[request.path]);
+				return;
+			}
+
+			this._httpResponder.sendFileNotFoundResponse(incomingSocket);
+		}
+	}, {
+		key: '_handleError',
+		value: function _handleError(incomingSocket, error) {
+			if (incomingSocket.readyState === 'open') this._httpResponder.sendErrorResponse(incomingSocket);
+			console.warn('bad request received');
 		}
 	}, {
 		key: 'registerFile',
