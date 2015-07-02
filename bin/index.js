@@ -14,6 +14,7 @@ var FileResponder = require('./FileResponder');
 var Constants = require('./Constants');
 var TCPCommunicator = require('./TCPCommunicator');
 var TCPSocketProvider = require('./TCPSocketProvider');
+var HttpRequestHandler = require('./HttpRequestHandler');
 
 var SdkResolver = require('omniscience-sdk-resolver');
 var utils = require('omniscience-utilities');
@@ -28,7 +29,7 @@ var Networking = (function () {
 	_createClass(Networking, [{
 		key: 'createHttpServer',
 		value: function createHttpServer() {
-			return new HttpServer(this._sdk.createTCPSocket(), utils.createUrlProvider(), new HttpResponder(NetworkingUtils, new SocketSender()), new HttpRequestParser(NetworkingUtils), this._sdk.timers(), new FileResponder(this._sdk.FileUtilities, new HttpResponder(NetworkingUtils, new SocketSender()), NetworkingUtils, new SocketSender()));
+			return new HttpServer(this._sdk.createTCPSocket(), utils.createUrlProvider(), new HttpResponder(NetworkingUtils, new SocketSender()), new HttpRequestHandler(NetworkingUtils, new HttpRequestParser(NetworkingUtils)), this._sdk.timers(), new FileResponder(this._sdk.FileUtilities, new HttpResponder(NetworkingUtils, new SocketSender()), NetworkingUtils, new SocketSender()));
 		}
 	}, {
 		key: 'createFileSharer',

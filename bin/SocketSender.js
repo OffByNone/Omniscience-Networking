@@ -14,12 +14,12 @@ var SocketSender = (function () {
 	_createClass(SocketSender, [{
 		key: 'send',
 		value: function send(socket, message, keepAlive) {
-			socket.ondrain = this.sendNextPart;
-			this.sendNextPart(socket, 0, message.length, message, keepAlive);
+			socket.ondrain = this._sendNextPart;
+			this._sendNextPart(socket, 0, message.length, message, keepAlive);
 		}
 	}, {
-		key: 'sendNextPart',
-		value: function sendNextPart(socket, offset, remaining, response, keepAlive) {
+		key: '_sendNextPart',
+		value: function _sendNextPart(socket, offset, remaining, response, keepAlive) {
 			var amountToSend = Math.min(remaining, Constants.socketBufferSize);
 			var bufferFull = socket.send(response, offset, amountToSend);
 
@@ -27,7 +27,7 @@ var SocketSender = (function () {
 			remaining -= amountToSend;
 
 			if (remaining > 0) {
-				if (!bufferFull) this.sendNextPart(socket, offset, remaining, response);
+				if (!bufferFull) this._sendNextPart(socket, offset, remaining, response, keepAlive);
 			} else if (!keepAlive) {
 				socket.close(); //todo: make timer and add params to keep alive so we can time it out, once keep alive is over
 			}

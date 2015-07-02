@@ -5,17 +5,18 @@ var _createClass = (function () { function defineProperties(target, props) { for
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
 var Constants = require('./Constants');
+var HttpRequest = require('./HttpRequest');
 
 var HttpServer = (function () {
-	function HttpServer(tcpSocket, urlProvider, httpResponder, requestParser, timer, fileResponder) {
+	function HttpServer(tcpSocket, urlProvider, httpResponder, httpRequestHandler, timer, fileResponder) {
 		_classCallCheck(this, HttpServer);
 
 		this._tcpSocket = tcpSocket;
 		this._urlProvider = urlProvider;
 		this._httpResponder = httpResponder;
-		this._requestParser = requestParser;
 		this._timer = timer;
 		this._fileResponder = fileResponder;
+		this._httpRequestHandler = httpRequestHandler;
 
 		this.isRunning = false;
 		this._registeredPaths = [];
@@ -35,11 +36,14 @@ var HttpServer = (function () {
 			console.log('listening on port ' + this.port);
 
 			this.socket.onconnect = function (incomingSocket) {
-				_this._requestParser.parseRequest(incomingSocket, function (request) {
-					return _this._handleRequest(incomingSocket, request);
-				}, function (error) {
-					return _this._handleError(incomingSocket, error);
-				});
+				var httpRequest = new HttpRequest();
+				incomingSocket.ondata = function (event) {
+					return _this._httpRequestHandler.handleRequest(incomingSocket, event.data, httpRequest, function (request) {
+						return _this._onRequestSuccess(request);
+					}, function (request, error) {
+						return _this._onRequestError(request, error);
+					});
+				};
 			};
 
 			this.isRunning = true;
@@ -57,14 +61,17 @@ var HttpServer = (function () {
 			return Math.floor(Math.random() * (65535 - 10000)) + 10000;
 		}
 	}, {
-		key: '_handleRequest',
-		value: function _handleRequest(incomingSocket, request) {
+		key: '_onRequestSuccess',
+		value: function _onRequestSuccess(request) {
 			var _this2 = this;
 
 			var timeout = this._timer.setTimeout(function () {
-				if (incomingSocket.readyState === 'open') //todo: check for ready state change, listen for close and remove timeout handler
-					_this2._httpResponder.sendTimeoutResponse(incomingSocket);
+				if (request.socket.readyState === 'open') _this2._httpResponder.sendTimeoutResponse(request.socket);
 			}, Constants.serverTimeoutInMilliseconds);
+
+			request.socket.onclose = function () {
+				return _this2._timer.clearTimeout(timeout);
+			};
 
 			if (this._registeredPaths.hasOwnProperty(request.path)) {
 				this._registeredPaths[request.path](request);
@@ -76,12 +83,12 @@ var HttpServer = (function () {
 				return;
 			}
 
-			this._httpResponder.sendFileNotFoundResponse(incomingSocket);
+			this._httpResponder.sendFileNotFoundResponse(request.socket);
 		}
 	}, {
-		key: '_handleError',
-		value: function _handleError(incomingSocket, error) {
-			if (incomingSocket.readyState === 'open') this._httpResponder.sendErrorResponse(incomingSocket);
+		key: '_onRequestError',
+		value: function _onRequestError(request, error) {
+			if (request.socket.readyState === 'open') this._httpResponder.sendErrorResponse(request.socket);
 			console.warn('bad request received');
 		}
 	}, {

@@ -1,6 +1,6 @@
 {
   "name": "omniscience-networking",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "Networking For Omniscience",
   "main": "./bin/index.js",
   "author": "OffByNone",

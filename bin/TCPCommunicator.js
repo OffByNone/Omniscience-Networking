@@ -1,3 +1,5 @@
+/* global Promise */
+
 'use strict';
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -22,24 +24,37 @@ var TCPCommunicator = (function () {
 			return new Promise(function (resolve, reject) {
 				var socket = _this._tcpSocketProvider.createTCPSocket();
 				socket.onopen = function () {
-					_this._socketSender.send(socket, data, waitForResponse);
-					_this._timers.setTimeout(function () {
-						try {
-							socket.close();
-							reject('Device did not respond within ' + _this.responseTimeout / 1000 + ' seconds.');
-						} catch (e) {}
-					}, _this.responseTimeout);
+					return _this._onopen(socket, data, waitForResponse, reject);
 				};
 				socket.onerror = function (err) {
 					return reject(err);
 				};
 				socket.ondata = function (dataReceived) {
-					//todo: this will only work when the entire response fits into a single packet, need to loop over this and parse it like in the HttpRequestParser, only different
-					socket.close();
-					resolve(dataReceived);
+					return _this._ondata(dataReceived, socket, resolve);
 				};
+
 				socket.open(ip, port);
 			});
+		}
+	}, {
+		key: '_onopen',
+		value: function _onopen(socket, data, waitForResponse, reject) {
+			var _this2 = this;
+
+			this._socketSender.send(socket, data, waitForResponse);
+			this._timers.setTimeout(function () {
+				try {
+					socket.close();
+					reject('Device did not respond within ' + _this2.responseTimeout / 1000 + ' seconds.');
+				} catch (e) {}
+			}, this.responseTimeout);
+		}
+	}, {
+		key: '_ondata',
+		value: function _ondata(dataReceived, socket, resolve) {
+			//todo: this will only work when the entire response fits into a single packet, need to loop over this and parse it like in the HttpRequestParser, only different
+			socket.close();
+			resolve(dataReceived);
 		}
 	}]);
 

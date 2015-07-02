@@ -1,37 +1,25 @@
 "use strict";
 
-var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; })();
+function _slicedToArray(arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } else { return Array.from(arr); } }
 
 module.exports = {
     toByteArray: function toByteArray(strToConvert) {
-        var length = (strToConvert || "").length;
-        var arrayBuffer = new ArrayBuffer(length);
-        var uint8Array = new Uint8Array(arrayBuffer);
-
-        for (var i = 0; i < length; i++) uint8Array[i] = strToConvert.charCodeAt(i);
-
-        return uint8Array;
-        //todo: the below commented out lines should be a shorter way of doing this
-        //however they caused problems when used so I reverted back to the above,
-        //look into these problems and see if we can switch back
-        //if (!strToConvert) return null;
-        //return new Uint8Array([].map.call(strToConvert, i => i.charCodeAt(0)));
+        return new Uint8Array([].map.call(strToConvert || "", function (i) {
+            return i.charCodeAt(0);
+        }));
     },
     toBuffer: function toBuffer(stringOrByteArray) {
         if (typeof stringOrByteArray === "string") return this.toByteArray(stringOrByteArray).buffer;
         if (stringOrByteArray instanceof Uint8Array) return stringOrByteArray.buffer;else throw new Error("argument must be of type string or Uint8Array");
     },
-    isArrayBuffer: function isArrayBuffer(obj) {
-        //this is here because running jasmine cli (node) will cause it to blow up.
-        return ArrayBuffer.isView(obj);
-    },
     toString: function toString(arrayBuffer) {
         var results = [];
         var uint8Array = new Uint8Array(arrayBuffer);
 
-        for (var i = 0, length = uint8Array.length; i < length; i += 200000) results.push(String.fromCharCode.apply(String, _toConsumableArray(uint8Array.subarray(i, i + 200000))));
+        for (var i = 0, length = uint8Array.length; i < length; i += 200000) //todo: figure out what this 200000 means, then move to constants
+        results.push(String.fromCharCode.apply(String, _toConsumableArray(uint8Array.subarray(i, i + 200000))));
 
         return results.join("");
     },
@@ -64,5 +52,11 @@ module.exports = {
     offsetBytes: function offsetBytes(offset, fileBytes) {
         if (!offset || offset <= 0) return fileBytes;
         return fileBytes.subarray(offset);
+    },
+
+    /* untestable */
+    isArrayBuffer: function isArrayBuffer(obj) {
+        //this is here because running jasmine cli (node) will cause it to blow up.
+        return ArrayBuffer.isView(obj);
     }
 };

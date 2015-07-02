@@ -1,10 +1,10 @@
 'use strict';
 
-var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i['return']) _i['return'](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError('Invalid attempt to destructure non-iterable instance'); } }; })();
-
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
 function _toArray(arr) { return Array.isArray(arr) ? arr : Array.from(arr); }
+
+function _slicedToArray(arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i['return']) _i['return'](); } finally { if (_d) throw _e; } } return _arr; } else { throw new TypeError('Invalid attempt to destructure non-iterable instance'); } }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
@@ -19,65 +19,44 @@ var HttpRequestParser = (function () {
 	}
 
 	_createClass(HttpRequestParser, [{
-		key: 'parseRequest',
-		value: function parseRequest(requestSocket, success, failure) {
-			var _this = this;
+		key: 'parseUrlParams',
+		value: function parseUrlParams(params) {
+			if (!params) return null;
 
-			var bodyBytes = [];
-			var bytesReceived = 0;
-			var request;
-			var totalBytes;
-			requestSocket.ondata = function (event) {
-				var packetBodyBytes;
+			var parsedParams = {};
+			params.split('&').forEach(function (keyValue) {
+				var _decodeURIComponent$split = decodeURIComponent(keyValue).split('=');
 
-				if (!request) {
-					var _separateBodyFromHead2 = _this._separateBodyFromHead(event.data);
+				var _decodeURIComponent$split2 = _slicedToArray(_decodeURIComponent$split, 2);
 
-					var _separateBodyFromHead22 = _slicedToArray(_separateBodyFromHead2, 2);
+				var key = _decodeURIComponent$split2[0];
+				var value = _decodeURIComponent$split2[1];
 
-					var head = _separateBodyFromHead22[0];
-					var body = _separateBodyFromHead22[1];
+				parsedParams[key] = value;
+			});
 
-					packetBodyBytes = _this._networkingUtils.toByteArray(body);
-					request = _this._parseMetadata(head);
-					if (!request) return failure();
-
-					request.socket = requestSocket;
-					totalBytes = parseInt(request.headers['content-length'], 10);
-				} else packetBodyBytes = event.data;
-
-				bytesReceived += packetBodyBytes.byteLength;
-				bodyBytes.push(packetBodyBytes);
-
-				if (isNaN(totalBytes) || bytesReceived >= totalBytes) {
-					var _networkingUtils;
-
-					var data = (_networkingUtils = _this._networkingUtils).merge.apply(_networkingUtils, bodyBytes);
-					request.body = _this._networkingUtils.toString(data);
-					return success(request);
-				}
-			};
+			return parsedParams;
 		}
 	}, {
-		key: '_separateBodyFromHead',
-		value: function _separateBodyFromHead(data) {
+		key: 'separateBodyFromHead',
+		value: function separateBodyFromHead(data) {
 			if (!data) return null;
 
 			var dataStr = this._networkingUtils.toString(data);
 			return dataStr.split(Constants.headerLineDelimiter + Constants.headerLineDelimiter);
 		}
 	}, {
-		key: '_parseMetadata',
-		value: function _parseMetadata(header) {
-			if (!header) return null;
+		key: 'parseMetadata',
+		value: function parseMetadata(metadata) {
+			if (!metadata) return null;
 
-			var _header$split = header.split(Constants.headerLineDelimiter);
+			var _metadata$split = metadata.split(Constants.headerLineDelimiter);
 
-			var _header$split2 = _toArray(_header$split);
+			var _metadata$split2 = _toArray(_metadata$split);
 
-			var requestLine = _header$split2[0];
+			var requestLine = _metadata$split2[0];
 
-			var headerLines = _header$split2.slice(1);
+			var headerLines = _metadata$split2.slice(1);
 
 			var _requestLine$split = requestLine.split(Constants.requestLineDelimiter);
 
@@ -96,7 +75,7 @@ var HttpRequestParser = (function () {
 			var path = _uri$split2[0];
 			var params = _uri$split2[1];
 
-			var parsedParams = this.parseUrlParams(params);
+			var parameters = this.parseUrlParams(params);
 
 			var headers = {};
 			headerLines.forEach(function (headerLine) {
@@ -111,32 +90,7 @@ var HttpRequestParser = (function () {
 				headers[name.toLowerCase()] = value.toLowerCase();
 			});
 
-			var request = new HttpRequest();
-			request.headers = headers;
-			request.method = method;
-			request.parameters = parsedParams;
-			request.path = path.toLowerCase();
-
-			return request;
-		}
-	}, {
-		key: 'parseUrlParams',
-		value: function parseUrlParams(params) {
-			if (!params) return null;
-
-			var parsedParams = {};
-			params.split('&').forEach(function (keyValue) {
-				var _decodeURIComponent$split = decodeURIComponent(keyValue).split('=');
-
-				var _decodeURIComponent$split2 = _slicedToArray(_decodeURIComponent$split, 2);
-
-				var key = _decodeURIComponent$split2[0];
-				var value = _decodeURIComponent$split2[1];
-
-				params[key] = value;
-			});
-
-			return parsedParams;
+			return { headers: headers, method: method, parameters: parameters, path: path.toLowerCase() };
 		}
 	}]);
 

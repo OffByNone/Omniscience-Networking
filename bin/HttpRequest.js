@@ -11,6 +11,11 @@ var HttpRequest = function HttpRequest() {
 	this.body = "";
 	this.path = "";
 	this.socket = {};
+	this.bytes = {
+		body: [],
+		received: 0,
+		total: 0
+	};
 };
 
 module.exports = HttpRequest;
