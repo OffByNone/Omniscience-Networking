@@ -4,7 +4,7 @@
   "description": "Networking For Omniscience",
   "main": "./bin/index.js",
   "author": "OffByNone",
-  "license": "MIT",
+  "license": "GNU GPL v3",
   "homepage": "https://github.com/offbynone/omniscience-networking",
   "bugs": {
     "url": "https://github.com/offbynone/omniscience-networking/issues"
