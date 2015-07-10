@@ -24,7 +24,7 @@ var HttpRequestHandler = (function () {
 		value: function handleRequest(socket, eventData, request, success, failure) {
 			var packetBodyBytes;
 
-			if (request.bytes.received === 0) {
+			if (request.bytes.receivedTotal === 0) {
 				request.socket = socket;
 
 				var _httpRequestParser$separateBodyFromHead = this._httpRequestParser.separateBodyFromHead(eventData);
@@ -49,10 +49,11 @@ var HttpRequestHandler = (function () {
 				request.bytes.total = parseInt(request.headers['content-length'], 10);
 			} else packetBodyBytes = eventData;
 
-			request.bytes.received += packetBodyBytes.byteLength;
+			request.bytes.receivedTotal += eventData.byteLength;
+			request.bytes.receivedBody += packetBodyBytes.byteLength;
 			request.bytes.body.push(packetBodyBytes);
 
-			if (isNaN(request.bytes.total) || request.bytes.received >= request.bytes.total) {
+			if (isNaN(request.bytes.total) || request.bytes.receivedTotal >= request.bytes.total) {
 				var _networkingUtils;
 
 				var mergedBody = (_networkingUtils = this._networkingUtils).merge.apply(_networkingUtils, _toConsumableArray(request.bytes.body));

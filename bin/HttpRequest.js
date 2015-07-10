@@ -13,7 +13,8 @@ var HttpRequest = function HttpRequest() {
 	this.socket = {};
 	this.bytes = {
 		body: [],
-		received: 0,
+		receivedBody: 0,
+		receivedTotal: 0,
 		total: 0
 	};
 };

@@ -22,7 +22,7 @@ var TCPCommunicator = (function () {
 			var _this = this;
 
 			return new Promise(function (resolve, reject) {
-				var socket = _this._tcpSocketProvider.createTCPSocket();
+				var socket = _this._tcpSocketProvider.createTCPSocket().open(ip, port);
 				socket.onopen = function () {
 					return _this._onopen(socket, data, waitForResponse, reject);
 				};
@@ -32,8 +32,6 @@ var TCPCommunicator = (function () {
 				socket.ondata = function (dataReceived) {
 					return _this._ondata(dataReceived, socket, resolve);
 				};
-
-				socket.open(ip, port);
 			});
 		}
 	}, {

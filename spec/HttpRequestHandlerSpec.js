@@ -27,11 +27,11 @@ describe("HttpRequestHandler", function () {
 			var head = "head";
 
 			_mockHttpRequestParser.separateBodyFromHead = jasmine.createSpy("separateBodyFromHead").and.returnValue([head, body]);
-			_mockHttpRequestParser.parseMetadata = jasmine.createSpy("parseMetadata").and.returnValue(null);		
-				
+			_mockHttpRequestParser.parseMetadata = jasmine.createSpy("parseMetadata").and.returnValue(null);
+
 			//act
 			_sut.handleRequest(socket, eventData, request, null, failure);
-			
+
 			//assert
 			expect(_mockHttpRequestParser.separateBodyFromHead).toHaveBeenCalledWith(eventData);
 			expect(_mockHttpRequestParser.parseMetadata).toHaveBeenCalledWith(head);
@@ -42,7 +42,7 @@ describe("HttpRequestHandler", function () {
 			//arrange
 			var request = new HttpRequest();
 			var socket = {};
-			var eventData = {};
+			var eventData = { byteLength: 85 };
 			var success = jasmine.createSpy("success");
 			var requestBodyBytes = "in before act";
 			request.bytes.body.push(requestBodyBytes);
@@ -64,10 +64,10 @@ describe("HttpRequestHandler", function () {
 			_mockNetworkingUtils.toByteArray = jasmine.createSpy("toByteArray").and.returnValue(packetBodyBytes);
 			_mockNetworkingUtils.merge = jasmine.createSpy("merge").and.returnValue(mergedBody);
 			_mockNetworkingUtils.toString = jasmine.createSpy("toString").and.returnValue(mergedBodyString);
-					
+
 			//act
 			_sut.handleRequest(socket, eventData, request, success, null);
-			
+
 			//assert
 			expect(_mockHttpRequestParser.separateBodyFromHead).toHaveBeenCalledWith(eventData);
 			expect(_mockHttpRequestParser.parseMetadata).toHaveBeenCalledWith(head);
@@ -82,7 +82,8 @@ describe("HttpRequestHandler", function () {
 			expect(request.method).toBe(metadata.method);
 			expect(request.path).toBe(metadata.path);
 			expect(request.bytes.total).toBeNaN();
-			expect(request.bytes.received).toBe(packetBodyBytes.byteLength);
+			expect(request.bytes.receivedTotal).toBe(eventData.byteLength);
+			expect(request.bytes.receivedBody).toBe(packetBodyBytes.byteLength);
 			expect(request.bytes.body.length).toBe(2);
 			expect(request.bytes.body[0]).toBe(requestBodyBytes);
 			expect(request.bytes.body[1]).toBe(packetBodyBytes);
@@ -96,7 +97,8 @@ describe("HttpRequestHandler", function () {
 			var success = jasmine.createSpy("success");
 			var requestBodyBytes = "in before act";
 			request.bytes.body.push(requestBodyBytes);
-			request.bytes.received = 80;
+			request.bytes.receivedTotal = 80;
+			request.bytes.receivedBody = 65;
 			request.bytes.total = 100;
 			request.headers = { "content-length": 100 };
 			request.parameters = "fixed";
@@ -109,10 +111,10 @@ describe("HttpRequestHandler", function () {
 
 			_mockNetworkingUtils.merge = jasmine.createSpy("merge").and.returnValue(mergedBody);
 			_mockNetworkingUtils.toString = jasmine.createSpy("toString").and.returnValue(mergedBodyString);
-					
+
 			//act
 			_sut.handleRequest(socket, eventData, request, success, null);
-			
+
 			//assert
 			expect(success).toHaveBeenCalledWith(request);
 			expect(request.bytes.body.length).toBe(2);
@@ -131,7 +133,7 @@ describe("HttpRequestHandler", function () {
 
 			//act
 			_sut.handleRequest(null, eventData, request, null, null);
-			
+
 			//assert
 			expect(request.bytes.body.length).toBe(1);
 			expect(request.bytes.body[0]).toBe(eventData);
@@ -149,7 +151,7 @@ describe("HttpRequestHandler", function () {
 
 			//act
 			_sut.handleRequest(null, eventData, request, null, null);
-			
+
 			//assert
 		});
 	});

@@ -43,7 +43,7 @@ var Networking = (function () {
 	}, {
 		key: 'createTCPCommunicator',
 		value: function createTCPCommunicator() {
-			return new TCPCommunicator(this._sdk.timers(), new TCPSocketProvider(), new SocketSender());
+			return new TCPCommunicator(this._sdk.timers(), new TCPSocketProvider(this._sdk.createTCPSocket), new SocketSender());
 		}
 	}]);
 

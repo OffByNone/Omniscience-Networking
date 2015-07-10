@@ -23,16 +23,19 @@ describe("TCPCommunicator", function () {
 			var port = "port";
 			var data = "data";
 			var waitForResponse = "waitForResponse";
-			var tcpSocket = { open: jasmine.createSpy("open") };
+			var tcpSocketWrapper = { open: jasmine.createSpy("open") };
 			var dataReceived = "data received";
+			var tcpSocket = {};
 
-			_mockTCPSocketProvider.createTCPSocket = jasmine.createSpy("createTCPSocket").and.returnValue(tcpSocket);
+			_mockTCPSocketProvider.createTCPSocket = jasmine.createSpy("createTCPSocket").and.returnValue(tcpSocketWrapper);
+			tcpSocketWrapper.open.and.returnValue(tcpSocket);
+
 			spyOn(_sut, '_onopen');
 			spyOn(_sut, '_ondata');
-			
+
 			//act
 			_sut.send(ip, port, data, waitForResponse);
-			
+
 			//assert
 			expect(typeof tcpSocket.onopen).toBe("function");
 			tcpSocket.onopen();
@@ -44,7 +47,7 @@ describe("TCPCommunicator", function () {
 
 			expect(typeof tcpSocket.onerror).toBe("function");
 
-			expect(tcpSocket.open).toHaveBeenCalledWith(ip, port);
+			expect(tcpSocketWrapper.open).toHaveBeenCalledWith(ip, port);
 		});
 	});
 	describe("_onopen", function () {
@@ -54,15 +57,15 @@ describe("TCPCommunicator", function () {
 			var data = "the data";
 			var waitForResponse = true;
 			var responseTimeout = "my response timeout";
-			
+
 			_sut.responseTimeout = responseTimeout;
 			_mockSocketSender.send = jasmine.createSpy("send");
 			_mockTimers.setTimeout = jasmine.createSpy("setTimeout");
 			socket.close.and.callFake(function () { throw new Error("close failed"); });
-			
+
 			//act
 			_sut._onopen(socket, data, waitForResponse, null);
-			
+
 			//assert
 			expect(_mockSocketSender.send).toHaveBeenCalledWith(socket, data, waitForResponse);
 			expect(_mockTimers.setTimeout).toHaveBeenCalledWith(jasmine.any(Function), responseTimeout);
@@ -71,26 +74,26 @@ describe("TCPCommunicator", function () {
 		});
 		it("should reject the promise when the socket successfully closes", function () {
 			//arrange
-			var reject = jasmine.createSpy("reject"); 
+			var reject = jasmine.createSpy("reject");
 			var socket = jasmine.createSpyObj("socket", ["close"]);
 			var data = "the data";
 			var waitForResponse = true;
 			var responseTimeout = 5000;
-			
+
 			_sut.responseTimeout = responseTimeout;
 			_mockSocketSender.send = jasmine.createSpy("send");
 			_mockTimers.setTimeout = jasmine.createSpy("setTimeout");
-			
+
 			//act
 			_sut._onopen(socket, data, waitForResponse, reject);
-			
+
 			//assert
 			expect(_mockSocketSender.send).toHaveBeenCalledWith(socket, data, waitForResponse);
 			expect(_mockTimers.setTimeout).toHaveBeenCalledWith(jasmine.any(Function), responseTimeout);
 			_mockTimers.setTimeout.calls.argsFor(0)[0]();
 			expect(socket.close).toHaveBeenCalledWith();
 			expect(reject).toHaveBeenCalledWith('Device did not respond within ' + (responseTimeout / 1000) + ' seconds.');
-		});		
+		});
 	});
 	describe("_ondata", function () {
 		it("should close socket then resolve the promise with the data received", function () {
@@ -98,10 +101,10 @@ describe("TCPCommunicator", function () {
 			var dataReceived = "the data";
 			var socket = jasmine.createSpyObj("socket", ["close"]);
 			var resolve = jasmine.createSpy("resolve");
-			
+
 			//act
 			_sut._ondata(dataReceived, socket, resolve);
-			
+
 			//assert
 			expect(socket.close).toHaveBeenCalledWith();
 			expect(resolve).toHaveBeenCalledWith(dataReceived);

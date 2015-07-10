@@ -1,5 +1,3 @@
-///<reference path="./support/jasmine.d.ts" />
-
 require("babel/register");
 
 const Constants = require('../lib/Constants');
