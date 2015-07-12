@@ -15,12 +15,12 @@ var FileSharer = (function () {
 
     _createClass(FileSharer, [{
         key: "shareFile",
-        value: function shareFile(file) {
+        value: function shareFile(file, serverIP) {
             var filePathHash = this._md5(file.path);
             var filePath = "/" + filePathHash + "/" + file.name;
             var encodedFilePath = encodeURI(filePath);
 
-            if (file.isLocal || !this._urlProvider.isValidUri(file.path)) return this._server.registerFile(encodedFilePath, file.path);else return file.path;
+            if (file.isLocal || !this._urlProvider.isValidUri(file.path)) return "http://" + serverIP + ":" + this._server.port + this._server.registerFile(encodedFilePath, file.path);else return file.path;
         }
     }]);
 
