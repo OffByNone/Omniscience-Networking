@@ -7,44 +7,42 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var Constants = require('./Constants');
 
 var FileResponder = (function () {
-    function FileResponder(fileUtils, httpResponder, networkingUtils, socketSender, responseBuilder) {
-        _classCallCheck(this, FileResponder);
+	function FileResponder(fileUtils, httpResponder, networkingUtils, socketSender, responseBuilder) {
+		_classCallCheck(this, FileResponder);
 
-        this._httpResponder = httpResponder;
-        this._fileUtils = fileUtils;
-        this._networkingUtils = networkingUtils;
-        this._socketSender = socketSender;
-        this._responseBuilder = responseBuilder;
-    }
+		this._httpResponder = httpResponder;
+		this._fileUtils = fileUtils;
+		this._networkingUtils = networkingUtils;
+		this._socketSender = socketSender;
+		this._responseBuilder = responseBuilder;
+	}
 
-    _createClass(FileResponder, [{
-        key: 'sendResponse',
-        value: function sendResponse(request, filePath) {
-            var _this = this;
+	_createClass(FileResponder, [{
+		key: 'sendResponse',
+		value: function sendResponse(request, filePath) {
+			var _this = this;
 
-            try {
-                var file = this._fileUtils.create(filePath);
-                this._fileUtils.readBytes(file.path).then(function (fileBytes) {
-                    var keepAlive = false;
-                    var offset = _this._networkingUtils.parseRange(request.headers['range']);
-                    var fileResponseBytes = _this._networkingUtils.offsetBytes(offset, fileBytes);
+			var file = this._fileUtils.create(filePath);
+			this._fileUtils.readBytes(file.path).then(function (fileBytes) {
+				var keepAlive = false;
+				var offset = _this._networkingUtils.parseRange(request.headers['range']);
+				var fileResponseBytes = _this._networkingUtils.offsetBytes(offset, fileBytes);
 
-                    var responseHeaders = _this._responseBuilder.createResponseHeaders(request.headers, file, fileResponseBytes.byteLength);
-                    if (request.method.toLowerCase() === 'head') fileResponseBytes = null;
-                    if (request.headers['connection'] === 'keep-alive') keepAlive = true;
+				var responseHeaders = _this._responseBuilder.createResponseHeaders(request.headers, file, fileResponseBytes.byteLength);
+				if (request.method.toLowerCase() === 'head') fileResponseBytes = null;
+				if (request.headers['connection'] === 'keep-alive') keepAlive = true;
 
-                    var response = _this._responseBuilder.createResponse(fileResponseBytes, responseHeaders);
+				var response = _this._responseBuilder.createResponse(fileResponseBytes, responseHeaders);
 
-                    _this._socketSender.send(request.socket, response, keepAlive);
-                });
-            } catch (e) {
-                console.warn(e);
-                this._httpResponder.sendErrorResponse(request.socket);
-            }
-        }
-    }]);
+				_this._socketSender.send(request.socket, response, keepAlive);
+			}, function (err) {
+				console.warn(err);
+				_this._httpResponder.sendErrorResponse(request.socket);
+			});
+		}
+	}]);
 
-    return FileResponder;
+	return FileResponder;
 })();
 
 module.exports = FileResponder;

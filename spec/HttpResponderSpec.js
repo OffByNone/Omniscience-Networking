@@ -1,5 +1,3 @@
-///<reference path="./support/jasmine.d.ts" />
-
 require("babel/register");
 
 const Constants = require('../lib/Constants');
@@ -88,7 +86,7 @@ describe("HttpResponder", function () {
 			_sut._sendResponse(socket, httpStatus);
 			
 			//assert
-			expect(_mockNetworkingUtils.toByteArray).toHaveBeenCalledWith(headers.join(Constants.headerLineDelimiter));
+			expect(_mockNetworkingUtils.toByteArray).toHaveBeenCalledWith(headers.join(Constants.headerLineDelimiter) + Constants.headerLineDelimiter + Constants.headerLineDelimiter);
 			expect(_mockSocketSender.send).toHaveBeenCalledWith(socket, byteArray.buffer, false);
 		});
 	});

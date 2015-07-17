@@ -1,5 +1,3 @@
-///<reference path="./support/jasmine.d.ts" />
-
 require("babel/register");
 
 const Constants = require('../lib/Constants');
@@ -23,17 +21,19 @@ describe("FileSharer", function () {
 			var filePathHash = "a hash of my file path";
 			var fileName = "name of my file";
 			var serverPath = "path to the file on the server";
+			var serverIP = "serverIP";
+			var serverPort = "serverPort";
 			var encodedFilePath = encodeURI(`/${filePathHash}/${fileName}`);
 			var file = { path: filePath, name: fileName, isLocal: true };
 
 			_mockMd5.and.returnValue(filePathHash);
 			_mockHttpServer.registerFile = jasmine.createSpy("registerFile").and.returnValue(serverPath);
-			
+			_mockHttpServer.port = serverPort;
 			//act
-			var actual = _sut.shareFile(file);
+			var actual = _sut.shareFile(file, serverIP);
 			
 			//assert
-			expect(actual).toBe(serverPath);
+			expect(actual).toBe("http://" + serverIP + ":" + serverPort + serverPath);
 			expect(_mockMd5).toHaveBeenCalledWith(filePath);
 			expect(_mockHttpServer.registerFile).toHaveBeenCalledWith(encodedFilePath, filePath);
 		});
@@ -43,18 +43,21 @@ describe("FileSharer", function () {
 			var filePathHash = "a hash of my file path";
 			var fileName = "name of my file";
 			var serverPath = "path to the file on the server";
+			var serverIP = "serverIP";
+			var serverPort = "serverPort";
 			var encodedFilePath = encodeURI(`/${filePathHash}/${fileName}`);
 			var file = { path: filePath, name: fileName };
 
 			_mockMd5.and.returnValue(filePathHash);
 			_mockHttpServer.registerFile = jasmine.createSpy("registerFile").and.returnValue(serverPath);
+			_mockHttpServer.port = serverPort;			
 			_mockUrlProvider.isValidUri = jasmine.createSpy("isValidUri").and.returnValue(false);
 			
 			//act
-			var actual = _sut.shareFile(file);
+			var actual = _sut.shareFile(file, serverIP);
 			
 			//assert
-			expect(actual).toBe(serverPath);
+			expect(actual).toBe("http://" + serverIP + ":" + serverPort + serverPath);
 			expect(_mockMd5).toHaveBeenCalledWith(filePath);
 			expect(_mockHttpServer.registerFile).toHaveBeenCalledWith(encodedFilePath, filePath);
 			expect(_mockUrlProvider.isValidUri).toHaveBeenCalledWith(filePath);	

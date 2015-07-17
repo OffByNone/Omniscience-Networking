@@ -87,7 +87,7 @@ var HttpRequestParser = (function () {
 				var value = _headerLine$split2[1];
 
 				if (!name || !value) return;
-				headers[name.toLowerCase()] = value.toLowerCase();
+				headers[name.toLowerCase().trim()] = value.toLowerCase().trim();
 			});
 
 			return { headers: headers, method: method, parameters: parameters, path: path.toLowerCase() };

@@ -22,15 +22,24 @@ describe("FileResponder", function () {
 		it("should send error response when there is an error", function () {
 			//arrange
 			var filePath = "path to file";
+			var file = { path: "path_to_my_file" };
 			var request = { socket: "request socket" };
+			var readBytesResponse = jasmine.createSpyObj("readBytesResponse", ["then"]);
+			
 
+			_mockFileUtils.create = jasmine.createSpy("create").and.returnValue(file);
+			_mockFileUtils.readBytes = jasmine.createSpy("readBytes").and.returnValue(readBytesResponse);			
 			_mockHttpResponder.sendErrorResponse = jasmine.createSpy("sendErrorResponse");
-			_mockFileUtils.create = function () { throw new Error(); };
+			readBytesResponse.then.and.callFake(function () { Promise.reject(); });
 			
 			//act
 			_sut.sendResponse(request, filePath);
 			
 			//assert
+			expect(readBytesResponse.then).toHaveBeenCalledWith(jasmine.any(Function), jasmine.any(Function));
+			readBytesResponse.then.calls.argsFor(0)[1]();
+
+			
 			expect(_mockHttpResponder.sendErrorResponse).toHaveBeenCalledWith(request.socket);
 		});
 		it("should send file response when there are no errors", function () {
@@ -49,7 +58,7 @@ describe("FileResponder", function () {
 			//assert
 			expect(_mockFileUtils.create).toHaveBeenCalledWith(filePath);
 			expect(_mockFileUtils.readBytes).toHaveBeenCalledWith(file.path);
-			expect(readBytesResponse.then).toHaveBeenCalledWith(jasmine.any(Function));
+			expect(readBytesResponse.then).toHaveBeenCalledWith(jasmine.any(Function), jasmine.any(Function));
 
 			//second arrange
 			var fileBytes = "17";
@@ -90,7 +99,7 @@ describe("FileResponder", function () {
 			//assert
 			expect(_mockFileUtils.create).toHaveBeenCalledWith(filePath);
 			expect(_mockFileUtils.readBytes).toHaveBeenCalledWith(file.path);
-			expect(readBytesResponse.then).toHaveBeenCalledWith(jasmine.any(Function));
+			expect(readBytesResponse.then).toHaveBeenCalledWith(jasmine.any(Function), jasmine.any(Function));
 
 			//second arrange
 			var fileBytes = "17";
@@ -114,6 +123,6 @@ describe("FileResponder", function () {
 			expect(_mockResponseBuilder.createResponseHeaders).toHaveBeenCalledWith(request.headers, file, fileResponseBytes.byteLength);
 			expect(_mockResponseBuilder.createResponse).toHaveBeenCalledWith(null, responseHeaders);
 			expect(_mockSocketSender.send).toHaveBeenCalledWith(request.socket, response, true);
-		});		
+		});
 	});
 });

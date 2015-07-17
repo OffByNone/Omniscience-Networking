@@ -30,7 +30,7 @@ var HttpServer = (function () {
 
 			if (this.isRunning) return;
 
-			this.port = this._getRandomPort();
+			if (!this.port) this.port = this._getRandomPort();
 			this.socket = this._tcpSocket.listen(this.port, { binaryType: 'arraybuffer' });
 
 			console.log('listening on port ' + this.port);
