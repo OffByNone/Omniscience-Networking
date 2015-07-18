@@ -12,7 +12,6 @@ var SocketSender = require('./SocketSender');
 var HttpResponder = require('./HttpResponder');
 var FileResponder = require('./FileResponder');
 var ResponseBuilder = require('./ResponseBuilder');
-var Constants = require('./Constants');
 var TCPCommunicator = require('./TCPCommunicator');
 var TCPSocketProvider = require('./TCPSocketProvider');
 var HttpRequestHandler = require('./HttpRequestHandler');

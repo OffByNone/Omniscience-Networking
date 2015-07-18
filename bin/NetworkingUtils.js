@@ -18,10 +18,10 @@ module.exports = {
         var results = [];
         var uint8Array = new Uint8Array(arrayBuffer);
 
-        for (var i = 0, length = uint8Array.length; i < length; i += 200000) //todo: figure out what this 200000 means, then move to constants
-        results.push(String.fromCharCode.apply(String, _toConsumableArray(uint8Array.subarray(i, i + 200000))));
-
-        return results.join("");
+        for (var i = 0, _length = uint8Array.length; i < _length; i += 200000) {
+            //todo: figure out what this 200000 means, then move to constants
+            results.push(String.fromCharCode.apply(String, _toConsumableArray(uint8Array.subarray(i, i + 200000))));
+        }return results.join("");
     },
     merge: function merge() {
         for (var _len = arguments.length, arrayBuffers = Array(_len), _key = 0; _key < _len; _key++) {

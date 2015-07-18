@@ -87,7 +87,7 @@ var HttpServer = (function () {
 		}
 	}, {
 		key: '_onRequestError',
-		value: function _onRequestError(request, error) {
+		value: function _onRequestError(request, err) {
 			if (request.socket.readyState === 'open') this._httpResponder.sendErrorResponse(request.socket);
 			console.warn('bad request received');
 		}

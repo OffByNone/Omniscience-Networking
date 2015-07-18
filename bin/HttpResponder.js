@@ -1,10 +1,10 @@
-'use strict';
+"use strict";
 
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Constants = require('./Constants');
+var Constants = require("./Constants");
 
 var HttpResponder = (function () {
     function HttpResponder(networkingUtils, socketSender) {
@@ -15,29 +15,29 @@ var HttpResponder = (function () {
     }
 
     _createClass(HttpResponder, [{
-        key: 'sendOkResponse',
+        key: "sendOkResponse",
         value: function sendOkResponse(socket) {
             this._sendResponse(socket, Constants.httpOkStatus);
         }
     }, {
-        key: 'sendFileNotFoundResponse',
+        key: "sendFileNotFoundResponse",
         value: function sendFileNotFoundResponse(socket) {
             this._sendResponse(socket, Constants.httpFileNotFoundStatus);
         }
     }, {
-        key: 'sendTimeoutResponse',
+        key: "sendTimeoutResponse",
         value: function sendTimeoutResponse(socket) {
             this._sendResponse(socket, Constants.httpTimeoutStatus);
         }
     }, {
-        key: 'sendErrorResponse',
+        key: "sendErrorResponse",
         value: function sendErrorResponse(socket) {
             this._sendResponse(socket, Constants.httpErrorStatus);
         }
     }, {
-        key: '_sendResponse',
+        key: "_sendResponse",
         value: function _sendResponse(socket, httpStatus) {
-            var headers = [Constants.httpVersion + ' ' + httpStatus.code + ' ' + httpStatus.reason, 'Server: ' + Constants.serverName, 'Content-Type: text\\plain', 'Connection: close', 'Content-Length: 0'];
+            var headers = [Constants.httpVersion + " " + httpStatus.code + " " + httpStatus.reason, "Server: " + Constants.serverName, "Content-Type: text\\plain", "Connection: close", "Content-Length: 0"];
 
             var headersBuffer = this._networkingUtils.toByteArray(headers.join(Constants.headerLineDelimiter) + Constants.headerLineDelimiter + Constants.headerLineDelimiter).buffer;
             this._socketSender.send(socket, headersBuffer, false);
