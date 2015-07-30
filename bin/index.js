@@ -33,7 +33,7 @@ var Networking = (function () {
 	_createClass(Networking, [{
 		key: 'createHttpServer',
 		value: function createHttpServer() {
-			return new HttpServer(this._sdk.createTCPSocket(), this._utilities.createUrlProvider(), new HttpResponder(NetworkingUtils, new SocketSender()), new HttpRequestHandler(NetworkingUtils, new HttpRequestParser(NetworkingUtils)), this._sdk.timers(), new FileResponder(this._sdk.FileUtilities, new HttpResponder(NetworkingUtils, new SocketSender()), NetworkingUtils, new SocketSender(), new ResponseBuilder(this._sdk.FileUtilities, NetworkingUtils)));
+			return new HttpServer(new TCPSocketProvider(this._sdk.createTCPSocket), this._utilities.createUrlProvider(), new HttpResponder(NetworkingUtils, new SocketSender()), new HttpRequestHandler(NetworkingUtils, new HttpRequestParser(NetworkingUtils)), this._sdk.timers(), new FileResponder(this._sdk.FileUtilities, new HttpResponder(NetworkingUtils, new SocketSender()), NetworkingUtils, new SocketSender(), new ResponseBuilder(this._sdk.FileUtilities, NetworkingUtils)));
 		}
 	}, {
 		key: 'createFileSharer',

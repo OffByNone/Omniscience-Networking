@@ -22,7 +22,7 @@ var ResponseBuilder = (function () {
                         var connection = requestHeaders['connection'] ? Constants.connectionKeepAlive : Constants.connectionClose;
                         var httpStatus = requestHeaders['range'] ? Constants.httpPartialStatus : Constants.httpOkStatus;
 
-                        var headers = [Constants.httpVersion + ' ' + httpStatus.code + ' ' + httpStatus.reason, 'Server: ' + Constants.serverName, 'Content-Type: ' + contentType, 'Connection: ' + connection, 'Content-Length: ' + contentLength];
+                        var headers = ['' + Constants.httpVersion + ' ' + httpStatus.code + ' ' + httpStatus.reason, 'Server: ' + Constants.serverName, 'Content-Type: ' + contentType, 'Connection: ' + connection, 'Content-Length: ' + contentLength];
 
                         return headers.join(Constants.headerLineDelimiter);
                 }

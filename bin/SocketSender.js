@@ -32,7 +32,7 @@ var SocketSender = (function () {
 				if (remainingBytes === 0 && !keepAlive) socket.close(); //todo: make timer and add params to keep alive so we can time it out, once keep alive is over x
 			};
 
-			socket.ondrain = sendNextPart;
+			socket.ondrain(sendNextPart);
 			sendNextPart();
 		}
 	}]);

@@ -8,10 +8,10 @@ var Constants = require('./Constants');
 var HttpRequest = require('./HttpRequest');
 
 var HttpServer = (function () {
-	function HttpServer(tcpSocket, urlProvider, httpResponder, httpRequestHandler, timer, fileResponder) {
+	function HttpServer(tcpSocketProvider, urlProvider, httpResponder, httpRequestHandler, timer, fileResponder) {
 		_classCallCheck(this, HttpServer);
 
-		this._tcpSocket = tcpSocket;
+		this._tcpSocketProvider = tcpSocketProvider;
 		this._urlProvider = urlProvider;
 		this._httpResponder = httpResponder;
 		this._timer = timer;
@@ -31,20 +31,21 @@ var HttpServer = (function () {
 			if (this.isRunning) return;
 
 			if (!this.port) this.port = this._getRandomPort();
-			this.socket = this._tcpSocket.listen(this.port, { binaryType: 'arraybuffer' });
+
+			this._socket = this._tcpSocketProvider.createTCPSocket().listen(this.port, { binaryType: 'arraybuffer' });
 
 			console.log('listening on port ' + this.port);
 
-			this.socket.onconnect = function (incomingSocket) {
+			this._socket.onconnect(function (incomingSocket) {
 				var httpRequest = new HttpRequest();
-				incomingSocket.ondata = function (event) {
-					return _this._httpRequestHandler.handleRequest(incomingSocket, event.data, httpRequest, function (request) {
+				incomingSocket.ondata(function (data) {
+					return _this._httpRequestHandler.handleRequest(incomingSocket, data, httpRequest, function (request) {
 						return _this._onRequestSuccess(request);
 					}, function (request, error) {
 						return _this._onRequestError(request, error);
 					});
-				};
-			};
+				});
+			});
 
 			this.isRunning = true;
 		}
@@ -52,7 +53,7 @@ var HttpServer = (function () {
 		key: 'stop',
 		value: function stop() {
 			if (!this.isRunning) return;
-			this.socket.close();
+			this._socket.close();
 			this.isRunning = false;
 		}
 	}, {
@@ -66,7 +67,7 @@ var HttpServer = (function () {
 			var _this2 = this;
 
 			var timeout = this._timer.setTimeout(function () {
-				if (request.socket.readyState === 'open') _this2._httpResponder.sendTimeoutResponse(request.socket);
+				if (request.socket.isOpen()) _this2._httpResponder.sendTimeoutResponse(request.socket);
 			}, Constants.serverTimeoutInMilliseconds);
 
 			request.socket.onclose = function () {
@@ -88,7 +89,7 @@ var HttpServer = (function () {
 	}, {
 		key: '_onRequestError',
 		value: function _onRequestError(request, err) {
-			if (request.socket.readyState === 'open') this._httpResponder.sendErrorResponse(request.socket);
+			if (request.socket.isOpen()) this._httpResponder.sendErrorResponse(request.socket);
 			console.warn('bad request received');
 		}
 	}, {

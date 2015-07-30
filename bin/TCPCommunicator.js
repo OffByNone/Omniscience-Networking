@@ -22,15 +22,15 @@ var TCPCommunicator = (function () {
 
 			return new Promise(function (resolve, reject) {
 				var socket = _this._tcpSocketProvider.createTCPSocket().open(ip, port);
-				socket.onopen = function () {
+				socket.onopen(function () {
 					return _this._onopen(socket, data, waitForResponse, reject);
-				};
-				socket.onerror = function (err) {
+				});
+				socket.onerror(function (err) {
 					return reject(err);
-				};
-				socket.ondata = function (dataReceived) {
+				});
+				socket.ondata(function (dataReceived) {
 					return _this._ondata(dataReceived, socket, resolve);
-				};
+				});
 			});
 		}
 	}, {
