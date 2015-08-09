@@ -32,7 +32,9 @@ var Networking = (function () {
 		value: function createSimpleServer() {
 			var httpServer = undefined;
 
-			if (this._sdk.isFirefox) httpServer = new HttpServer(this._sdk.RawTCPProvider, this._utilities.createUrlProvider(), new HttpResponder(NetworkingUtils, this._sdk.createSocketSender()), new HttpRequestHandler(NetworkingUtils, new HttpRequestParser(NetworkingUtils)), this._sdk.timers(), new FileResponder(this._sdk.FileUtilities, new HttpResponder(NetworkingUtils, this._sdk.createSocketSender()), NetworkingUtils, this._sdk.createSocketSender(), new ResponseBuilder(this._sdk.FileUtilities, NetworkingUtils)));else if (this._sdk.isChrome) httpServer = new HttpServer();
+			if (this._sdk.isFirefox) httpServer = new HttpServer(this._sdk.RawTCPProvider, this._utilities.createUrlProvider(), new HttpResponder(NetworkingUtils, this._sdk.createSocketSender()), new HttpRequestHandler(NetworkingUtils, new HttpRequestParser(NetworkingUtils)), this._sdk.timers(), new FileResponder(this._sdk.FileUtilities, new HttpResponder(NetworkingUtils, this._sdk.createSocketSender()), NetworkingUtils, this._sdk.createSocketSender(), new ResponseBuilder(this._sdk.FileUtilities, NetworkingUtils)));else if (this._sdk.isChrome) httpServer = { start: function start() {
+					return -1;
+				} };
 
 			return new SimpleServer(httpServer, this._utilities.createUrlProvider, this._utilities.MD5());
 		}

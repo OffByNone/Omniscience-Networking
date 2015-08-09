@@ -37,7 +37,7 @@ var HttpResponder = (function () {
     }, {
         key: "_sendResponse",
         value: function _sendResponse(socket, httpStatus) {
-            var headers = ["" + Constants.httpVersion + " " + httpStatus.code + " " + httpStatus.reason, "Server: " + Constants.serverName, "Content-Type: text\\plain", "Connection: close", "Content-Length: 0"];
+            var headers = [Constants.httpVersion + " " + httpStatus.code + " " + httpStatus.reason, "Server: " + Constants.serverName, "Content-Type: text\\plain", "Connection: close", "Content-Length: 0"];
 
             var headersBuffer = this._networkingUtils.toByteArray(headers.join(Constants.headerLineDelimiter) + Constants.headerLineDelimiter + Constants.headerLineDelimiter).buffer;
             this._socketSender.send(socket, headersBuffer, false);

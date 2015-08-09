@@ -40,7 +40,7 @@ var SimpleServer = (function () {
 			if (!file.isLocal && this._urlProvider.isValidUri(file.path)) return file.path;
 
 			this._httpServer.registeredFiles[pathname] = file.path;
-			return "http://" + serverIP + ":" + this._httpServer.port + "" + pathname;
+			return "http://" + serverIP + ":" + this._httpServer.port + pathname;
 		}
 	}, {
 		key: "registerPath",
