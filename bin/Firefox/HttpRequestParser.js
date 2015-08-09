@@ -8,7 +8,7 @@ function _slicedToArray(arr, i) { if (Array.isArray(arr)) { return arr; } else i
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-var Constants = require('./Constants');
+var Constants = require('../Constants');
 
 var HttpRequestParser = (function () {
 	function HttpRequestParser(networkingUtils) {

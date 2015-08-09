@@ -4,14 +4,14 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-var Constants = require('./Constants');
+var Constants = require('../Constants');
 var HttpRequest = require('./HttpRequest');
 
 var HttpServer = (function () {
-	function HttpServer(tcpSocketProvider, urlProvider, httpResponder, httpRequestHandler, timer, fileResponder) {
+	function HttpServer(rawTCPProvider, urlProvider, httpResponder, httpRequestHandler, timer, fileResponder) {
 		_classCallCheck(this, HttpServer);
 
-		this._tcpSocketProvider = tcpSocketProvider;
+		this._rawTCPProvider = rawTCPProvider;
 		this._urlProvider = urlProvider;
 		this._httpResponder = httpResponder;
 		this._timer = timer;
@@ -19,8 +19,9 @@ var HttpServer = (function () {
 		this._httpRequestHandler = httpRequestHandler;
 
 		this.isRunning = false;
-		this._registeredPaths = [];
-		this._registeredFiles = [];
+		this.port = null;
+		this.registeredPaths = {};
+		this.registeredFiles = {};
 	}
 
 	_createClass(HttpServer, [{
@@ -32,9 +33,7 @@ var HttpServer = (function () {
 
 			if (!this.port) this.port = this._getRandomPort();
 
-			this._socket = this._tcpSocketProvider.createTCPSocket().listen(this.port, { binaryType: 'arraybuffer' });
-
-			console.log('listening on port ' + this.port);
+			this._socket = this._rawTCPProvider.create().listen(this.port, { binaryType: 'arraybuffer' });
 
 			this._socket.onconnect(function (incomingSocket) {
 				var httpRequest = new HttpRequest();
@@ -48,6 +47,8 @@ var HttpServer = (function () {
 			});
 
 			this.isRunning = true;
+
+			return this.port;
 		}
 	}, {
 		key: 'stop',
@@ -70,17 +71,18 @@ var HttpServer = (function () {
 				if (request.socket.isOpen()) _this2._httpResponder.sendTimeoutResponse(request.socket);
 			}, Constants.serverTimeoutInMilliseconds);
 
+			request.path = request.path.toLowerCase();
+
 			request.socket.onclose = function () {
 				return _this2._timer.clearTimeout(timeout);
 			};
-
-			if (this._registeredPaths.hasOwnProperty(request.path)) {
-				this._registeredPaths[request.path](request);
+			if (this.registeredPaths.hasOwnProperty(request.path)) {
+				this.registeredPaths[request.path](request);
 				return;
 			}
 
-			if (this._registeredFiles.hasOwnProperty(request.path)) {
-				this._fileResponder.sendResponse(request, this._registeredFiles[request.path]);
+			if (this.registeredFiles.hasOwnProperty(request.path)) {
+				this._fileResponder.sendResponse(request, this.registeredFiles[request.path]);
 				return;
 			}
 
@@ -91,20 +93,6 @@ var HttpServer = (function () {
 		value: function _onRequestError(request, err) {
 			if (request.socket.isOpen()) this._httpResponder.sendErrorResponse(request.socket);
 			console.warn('bad request received');
-		}
-	}, {
-		key: 'registerFile',
-		value: function registerFile(serverPath, filepath) {
-			var pathname = this._urlProvider.createUrl(serverPath.toLowerCase(), 'http://localhost/').pathname;
-			if (filepath) this._registeredFiles[pathname] = filepath;else delete this._registeredFiles[pathname];
-			return pathname;
-		}
-	}, {
-		key: 'registerPath',
-		value: function registerPath(serverPath, callback) {
-			var pathname = this._urlProvider.createUrl(serverPath.toLowerCase(), 'http://localhost/').pathname;
-			if (callback) this._registeredPaths[pathname] = callback;else delete this._registeredPaths[pathname];
-			return pathname;
 		}
 	}]);
 

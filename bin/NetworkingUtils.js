@@ -42,10 +42,10 @@ module.exports = {
 
         var _rangeHeader$split2 = _slicedToArray(_rangeHeader$split, 2);
 
-        var type = _rangeHeader$split2[0];
+        var rangeType = _rangeHeader$split2[0];
         var offsetPlusDash = _rangeHeader$split2[1];
 
-        if (type.toLowerCase() !== "bytes") return 0;
+        if (rangeType.toLowerCase() !== "bytes") return 0;
 
         return Number(offsetPlusDash.replace("-", ""));
     },
