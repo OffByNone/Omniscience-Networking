@@ -4,21 +4,20 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-var Constants = require('../Constants');
+var Constants = require('./Constants');
 
 var ResponseBuilder = (function () {
-        function ResponseBuilder(fileUtils, networkingUtils) {
+        function ResponseBuilder(networkingUtils) {
                 _classCallCheck(this, ResponseBuilder);
 
-                this._fileUtils = fileUtils;
                 this._networkingUtils = networkingUtils;
         }
 
         _createClass(ResponseBuilder, [{
                 key: 'createResponseHeaders',
-                value: function createResponseHeaders(requestHeaders, file, contentLength) {
+                value: function createResponseHeaders(requestHeaders, mimetype, contentLength) {
                         //todo: validate parameters
-                        var contentType = this._fileUtils.getMimeType(file);
+                        var contentType = mimetype;
                         var connection = requestHeaders['connection'] ? Constants.connectionKeepAlive : Constants.connectionClose;
                         var httpStatus = requestHeaders['range'] ? Constants.httpPartialStatus : Constants.httpOkStatus;
 

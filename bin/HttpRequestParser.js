@@ -8,7 +8,7 @@ function _toArray(arr) { return Array.isArray(arr) ? arr : Array.from(arr); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-var Constants = require('../Constants');
+var Constants = require('./Constants');
 
 var HttpRequestParser = (function () {
 	function HttpRequestParser(networkingUtils) {

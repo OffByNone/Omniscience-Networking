@@ -20,13 +20,12 @@ var FileResponder = (function () {
 		value: function sendResponse(request, filePath) {
 			var _this = this;
 
-			var file = this._fileUtils.create(filePath);
-			this._fileUtils.readBytes(file.path).then(function (fileBytes) {
+			this._fileUtils.readBytes(filePath).then(function (fileBytes, mimetype) {
 				var keepAlive = false;
 				var offset = _this._networkingUtils.parseRange(request.headers['range']);
 				var fileResponseBytes = _this._networkingUtils.offsetBytes(offset, fileBytes);
 
-				var responseHeaders = _this._responseBuilder.createResponseHeaders(request.headers, file, fileResponseBytes.byteLength);
+				var responseHeaders = _this._responseBuilder.createResponseHeaders(request.headers, mimetype, fileResponseBytes.byteLength);
 				if (request.method.toLowerCase() === 'head') fileResponseBytes = null;
 				if (request.headers['connection'] === 'keep-alive') keepAlive = true;
 
