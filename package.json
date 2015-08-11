@@ -20,11 +20,11 @@
 	"repository": {
 		"type": "git",
 		"url": "git://github.com/offbynone/omniscience-networking.git"
-	},	
+	},
 	"devDependencies": {
-		"babel": "^5.8.20",
-		"eslint": "^1.0.0",
-		"jasmine": "^2.3.1"
+		"babel": "^5.8.21",
+		"eslint": "^1.1.0",
+		"jasmine": "^2.3.2"
 	},
 	"dependencies": {
 		"omniscience-sdk-resolver": "offbynone/omniscience-sdk-resolver",
