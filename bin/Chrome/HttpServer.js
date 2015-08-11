@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
@@ -21,7 +21,7 @@ var HttpServer = (function () {
 
 		this.isRunning = false;
 		this.port = null;
-		this.localAddress = '0.0.0.0';
+		this.localAddress = "0.0.0.0";
 		this.registeredPaths = {};
 		this.registeredFiles = {};
 	}
@@ -36,7 +36,7 @@ var HttpServer = (function () {
 			if (!this.port) this.port = this._getRandomPort();
 
 			//todo: should this be persistent?
-			this._chromeTCPServer.create({ persistent: false, name: 'httpServerSocket' }, function (_ref) {
+			this._chromeTCPServer.create({ persistent: false, name: "httpServerSocket" }, function (_ref) {
 				var socketId = _ref.socketId;
 
 				_this._socketId = socketId;
@@ -49,30 +49,32 @@ var HttpServer = (function () {
 				});
 			});
 
-			this._chromeTCPServer.onAccept.addListener(function (_ref2) {
+			this._chromeTCP.onReceive.addListener(function (_ref2) {
 				var socketId = _ref2.socketId;
-				var clientSocketId = _ref2.clientSocketId;
+				var data = _ref2.data;
 
 				var httpRequest = new HttpRequest();
 
-				_this._chromeTCP.onReceive.addListener(function (_ref3) {
-					var socketId = _ref3.socketId;
-					var data = _ref3.data;
+				if (socketId !== socketId) return;
 
-					if (socketId !== clientSocketId) return;
-
-					_this._httpRequestHandler.handleRequest(clientSocketId, data, httpRequest, function (request) {
-						return _this._onRequestSuccess(request);
-					}, function (request, error) {
-						return _this._onRequestError(request, error);
-					});
+				_this._httpRequestHandler.handleRequest(socketId, data, httpRequest, function (request) {
+					return _this._onRequestSuccess(request);
+				}, function (request, error) {
+					return _this._onRequestError(request, error);
 				});
 			});
+			this._chromeTCPServer.onAccept.addListener(function (_ref3) {
+				var socketId = _ref3.socketId;
+				var clientSocketId = _ref3.clientSocketId;
+
+				_this._chromeTCP.setPaused(clientSocketId, false);
+			});
+
 			this._chromeTCPServer.onAcceptError.addListener(function (_ref4) {
 				var socketId = _ref4.socketId;
 				var resultCode = _ref4.resultCode;
 
-				console.log('error on socket ' + socketId + ' code: ' + resultCode);
+				console.log("error on socket " + socketId + " code: " + resultCode);
 				_this._chromeTCPServer.setPaused(socketId, false);
 			});
 
@@ -103,6 +105,10 @@ var HttpServer = (function () {
 			//todo: look into whether or not the below is actually a good idea
 			//todo: the firefox server clears the timeout when the socket closes, as it has
 			//an onclose event.  As far as I can tell chrome's doesn't.  See if we can detect onclose this
+			//if the socket is already closed chrome throws two errors
+			//Unchecked runtime.lastError while running sockets.tcp.getInfo: Socket not found
+			//and
+			//Error in response to sockets.tcp.getInfo: TypeError: Cannot read property 'connected' of undefined
 			var timeout = this._timer.setTimeout(function () {
 				_this3._chromeTCP.getInfo(request.socket, function (_ref5) {
 					var connected = _ref5.connected;
