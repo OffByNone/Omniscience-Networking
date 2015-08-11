@@ -49,24 +49,26 @@ var HttpServer = (function () {
 				});
 			});
 
-			this._chromeTCP.onReceive.addListener(function (_ref2) {
+			this._chromeTCPServer.onAccept.addListener(function (_ref2) {
 				var socketId = _ref2.socketId;
-				var data = _ref2.data;
+				var clientSocketId = _ref2.clientSocketId;
+
+				if (_this._socketId !== socketId) return;
 
 				var httpRequest = new HttpRequest();
 
-				if (socketId !== socketId) return;
+				_this._chromeTCP.onReceive.addListener(function (_ref3) {
+					var socketId = _ref3.socketId;
+					var data = _ref3.data;
 
-				_this._httpRequestHandler.handleRequest(socketId, data, httpRequest, function (request) {
-					return _this._onRequestSuccess(request);
-				}, function (request, error) {
-					return _this._onRequestError(request, error);
+					if (socketId !== clientSocketId) return;
+
+					_this._httpRequestHandler.handleRequest(socketId, data, httpRequest, function (request) {
+						return _this._onRequestSuccess(request);
+					}, function (request, error) {
+						return _this._onRequestError(request, error);
+					});
 				});
-			});
-			this._chromeTCPServer.onAccept.addListener(function (_ref3) {
-				var socketId = _ref3.socketId;
-				var clientSocketId = _ref3.clientSocketId;
-
 				_this._chromeTCP.setPaused(clientSocketId, false);
 			});
 
