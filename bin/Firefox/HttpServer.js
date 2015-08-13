@@ -67,10 +67,8 @@ var HttpServer = (function () {
 		value: function _onRequestSuccess(request) {
 			var _this2 = this;
 
-			//todo: look into whether or not the below is actually a good idea
-			var timeout = this._timer.setTimeout(function () {
-				if (request.socket.isOpen()) _this2._httpResponder.sendTimeoutResponse(request.socket);
-			}, Constants.serverTimeoutInMilliseconds);
+			// //todo: look into whether or not the below is actually a good idea
+			var timeout = this._timer.setTimeout(function () {}, Constants.serverTimeoutInMilliseconds);
 
 			request.path = request.path.toLowerCase();
 
@@ -101,3 +99,6 @@ var HttpServer = (function () {
 })();
 
 module.exports = HttpServer;
+
+//if (request.socket.isOpen())
+//this._httpResponder.sendTimeoutResponse(request.socket);

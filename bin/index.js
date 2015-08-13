@@ -39,7 +39,7 @@ var Networking = (function () {
 				httpServer = new ChromeServer(this._utilities.createUrlProvider(), new HttpResponder(NetworkingUtils, this._sdk.createSocketSender()), new HttpRequestHandler(NetworkingUtils, new HttpRequestParser(NetworkingUtils)), this._sdk.timers(), new FileResponder(this._sdk.createFileUtilities(), new HttpResponder(NetworkingUtils, this._sdk.createSocketSender()), NetworkingUtils, this._sdk.createSocketSender(), new ResponseBuilder(NetworkingUtils)), this._sdk.chromeTCPServer, this._sdk.chromeTCP);
 			}
 
-			return new SimpleServer(httpServer, this._utilities.createUrlProvider, this._utilities.MD5());
+			return new SimpleServer(httpServer, this._utilities.createUrlProvider(), this._utilities.MD5());
 		}
 	}]);
 

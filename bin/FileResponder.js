@@ -20,7 +20,10 @@ var FileResponder = (function () {
 		value: function sendResponse(request, filePath) {
 			var _this = this;
 
-			this._fileUtils.readBytes(filePath).then(function (fileBytes, mimetype) {
+			this._fileUtils.readBytes(filePath).then(function (_ref) {
+				var fileBytes = _ref.fileBytes;
+				var mimetype = _ref.mimetype;
+
 				var keepAlive = false;
 				var offset = _this._networkingUtils.parseRange(request.headers['range']);
 				var fileResponseBytes = _this._networkingUtils.offsetBytes(offset, fileBytes);

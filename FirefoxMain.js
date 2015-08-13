@@ -2,18 +2,16 @@ var httpServer;
 
 module.exports.main = function main() {
 	//extension startup
-	
+
 	const CompositionRoot = require("./bin/index");
 	let compositionRoot = new CompositionRoot();
 
-	httpServer = compositionRoot.createHttpServer();
-	httpServer.port = "12345";
+	httpServer = compositionRoot.createSimpleServer();
 	httpServer.start();
-	
-	let serverPath = "/b";
-	let filePath = "PATH_TO_FILE_HERE\\bigbuckbunny.mp4";
-	
-	httpServer.registerFile(serverPath, filePath);
+
+	let file = { path: "\\AbsolutePathHere\BigBuckBunny.mp4", name: "BigBuckBunny.mp4", isLocal: true };
+
+	console.log(httpServer.registerFile(file, "192.168.1.4"));
 };
 
 require("sdk/system/unload").when(function (reason) {
