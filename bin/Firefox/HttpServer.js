@@ -99,6 +99,3 @@ var HttpServer = (function () {
 })();
 
 module.exports = HttpServer;
-
-//if (request.socket.isOpen())
-//this._httpResponder.sendTimeoutResponse(request.socket);
