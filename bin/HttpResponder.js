@@ -4,7 +4,7 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Constants = require("./Constants");
+var Constants = require('./Constants');
 
 var HttpResponder = (function () {
     function HttpResponder(networkingUtils, socketSender) {
@@ -37,7 +37,7 @@ var HttpResponder = (function () {
     }, {
         key: "_sendResponse",
         value: function _sendResponse(socket, httpStatus) {
-            var headers = ["" + Constants.httpVersion + " " + httpStatus.code + " " + httpStatus.reason, "Server: " + Constants.serverName, "Content-Type: text\\plain", "Connection: close", "Content-Length: 0"];
+            var headers = [Constants.httpVersion + " " + httpStatus.code + " " + httpStatus.reason, "Server: " + Constants.serverName, "Content-Type: text\\plain", "Connection: close", "Content-Length: 0"];
 
             var headersBuffer = this._networkingUtils.toByteArray(headers.join(Constants.headerLineDelimiter) + Constants.headerLineDelimiter + Constants.headerLineDelimiter).buffer;
             this._socketSender.send(socket, headersBuffer);

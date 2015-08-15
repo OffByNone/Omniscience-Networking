@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
@@ -21,15 +21,15 @@ var ResponseBuilder = (function () {
                         var connection = requestHeaders['connection'] ? Constants.connectionKeepAlive : Constants.connectionClose;
                         var httpStatus = requestHeaders['range'] ? Constants.httpPartialStatus : Constants.httpOkStatus;
 
-                        var headers = ['' + Constants.httpVersion + ' ' + httpStatus.code + ' ' + httpStatus.reason, 'Server: ' + Constants.serverName, 'Content-Type: ' + contentType, 'Connection: ' + connection, 'Content-Length: ' + contentLength];
+                        var headers = [Constants.httpVersion + ' ' + httpStatus.code + ' ' + httpStatus.reason, 'Server: ' + Constants.serverName, 'Content-Type: ' + contentType, 'Connection: ' + connection, 'Content-Length: ' + contentLength];
 
                         return headers.join(Constants.headerLineDelimiter);
                 }
         }, {
                 key: 'createResponse',
                 value: function createResponse(body, headers) {
-                        if (body && !this._networkingUtils.isArrayBuffer(body)) throw new Error('Body must be a byte array or null.');
-                        if (typeof headers !== 'string') throw new Error('Headers must be a string');
+                        if (body && !this._networkingUtils.isArrayBuffer(body)) throw new Error("Body must be a byte array or null.");
+                        if (typeof headers !== "string") throw new Error("Headers must be a string");
 
                         var headersByteArray = this._networkingUtils.toByteArray(headers + Constants.headerLineDelimiter + Constants.headerLineDelimiter);
                         if (!body) return headersByteArray.buffer;
