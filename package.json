@@ -2,7 +2,7 @@
 	"name": "omniscience-networking",
 	"version": "0.8.1",
 	"description": "Networking For Omniscience",
-	"title": "Omniscience",
+	"title": "Omniscience Networking",
 	"main": "./bin/index.js",
 	"author": "OffByNone",
 	"license": "GNU GPL v3",
