@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
@@ -33,7 +33,7 @@ var HttpServer = (function () {
 
 			if (!this.port) this.port = this._getRandomPort();
 
-			this._socket = this._tcpSocketProvider.create().listen(this.port, { binaryType: "arraybuffer" });
+			this._socket = this._tcpSocketProvider.create().listen(this.port, { binaryType: 'arraybuffer' });
 
 			this._socket.onconnect(function (incomingSocket) {
 				var httpRequest = new HttpRequest();
@@ -68,11 +68,7 @@ var HttpServer = (function () {
 			var _this2 = this;
 
 			/*todo: look into whether or not the below is actually a good idea */
-			var timeout = this._timer.setTimeout(function () {
-				/* if (request.socket.isOpen())
-     * this._httpResponder.sendTimeoutResponse(request.socket);
-     */
-			}, Constants.serverTimeoutInMilliseconds);
+			var timeout = this._timer.setTimeout(function () {}, Constants.serverTimeoutInMilliseconds);
 
 			request.path = request.path.toLowerCase();
 
@@ -103,3 +99,7 @@ var HttpServer = (function () {
 })();
 
 module.exports = HttpServer;
+
+/* if (request.socket.isOpen())
+ * this._httpResponder.sendTimeoutResponse(request.socket);
+ */

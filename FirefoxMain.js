@@ -9,7 +9,7 @@ module.exports.main = function main() {
 	httpServer = compositionRoot.createSimpleServer();
 	httpServer.start();
 
-	let file = { path: "\\AbsolutePathHere\BigBuckBunny.mp4", name: "BigBuckBunny.mp4", isLocal: true };
+	let file = { path: "Absolute_Path_To\\BigBuckBunny.mp4", name: "BigBuckBunny.mp4", isLocal: true };
 
 	console.log(httpServer.registerFile(file, "192.168.1.4"));
 };

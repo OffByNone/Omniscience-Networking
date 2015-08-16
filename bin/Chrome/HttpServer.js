@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
@@ -21,7 +21,7 @@ var HttpServer = (function () {
 
 		this.isRunning = false;
 		this.port = null;
-		this.localAddress = "0.0.0.0";
+		this.localAddress = '0.0.0.0';
 		this.registeredPaths = {};
 		this.registeredFiles = {};
 		this.incomingConnections = {};
@@ -65,12 +65,12 @@ var HttpServer = (function () {
 				var socketId = _ref3.socketId;
 				var resultCode = _ref3.resultCode;
 
-				console.log("error on socket " + socketId + " code: " + resultCode);
+				console.log('error on socket ' + socketId + ' code: ' + resultCode);
 				_this._chromeTCPServer.setPaused(socketId, false);
 			});
 
 			//todo: should this be persistent?
-			this._chromeTCPServer.create({ persistent: false, name: "httpServerSocket" }, function (_ref4) {
+			this._chromeTCPServer.create({ persistent: false, name: 'httpServerSocket' }, function (_ref4) {
 				var socketId = _ref4.socketId;
 
 				_this._socketId = socketId;

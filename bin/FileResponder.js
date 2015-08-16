@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
@@ -31,10 +31,11 @@ var FileResponder = (function () {
 				var responseHeaders = _this._responseBuilder.createResponseHeaders(request.headers, mimetype, fileResponseBytes.byteLength);
 				if (request.method.toLowerCase() === 'head') fileResponseBytes = null;
 				if (request.headers['connection'] === 'keep-alive') keepAlive = true;
-
-				var response = _this._responseBuilder.createResponse(fileResponseBytes, responseHeaders);
-
-				_this._socketSender.send(request.socket, response, keepAlive);
+				console.log("about to send headers.");
+				_this._socketSender.send(request.socket, responseHeaders.buffer, true).then(function () {
+					console.log('headers sent, sending body.');
+					_this._socketSender.send(request.socket, fileResponseBytes.buffer, keepAlive);
+				});
 			}, function (err) {
 				console.warn(err);
 				_this._httpResponder.sendErrorResponse(request.socket);

@@ -4,7 +4,7 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Constants = require('./Constants');
+var Constants = require("./Constants");
 
 var SimpleServer = (function () {
 	function SimpleServer(httpServer, urlProvider, md5) {
@@ -40,7 +40,7 @@ var SimpleServer = (function () {
 			if (!file.isLocal && this._urlProvider.isValidUri(file.path)) return file.path;
 
 			this._httpServer.registeredFiles[pathname] = file.path;
-			return "http://" + serverIP + ":" + this._httpServer.port + pathname;
+			return "http://" + serverIP + ":" + this._httpServer.port + "" + pathname;
 		}
 	}, {
 		key: "registerPath",
