@@ -31,7 +31,7 @@ var FileResponder = (function () {
 				var responseHeaders = _this._responseBuilder.createResponseHeaders(request.headers, mimetype, fileResponseBytes.byteLength);
 				if (request.method.toLowerCase() === 'head') fileResponseBytes = null;
 				if (request.headers['connection'] === 'keep-alive') keepAlive = true;
-				console.log("about to send headers.");
+
 				_this._socketSender.send(request.socket, responseHeaders.buffer, true).then(function () {
 					console.log('headers sent, sending body.');
 					_this._socketSender.send(request.socket, fileResponseBytes.buffer, keepAlive);
