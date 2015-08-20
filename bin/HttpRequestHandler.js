@@ -43,14 +43,14 @@ var HttpRequestHandler = (function () {
 				request.parameters = metadata.parameters;
 				request.method = metadata.method;
 				request.path = metadata.path;
-				request.bytes.total = parseInt(request.headers["content-length"], 10);
+				if (request.headers.hasOwnProperty("content-length")) request.bytes.total = parseInt(request.headers["content-length"], 10);else request.bytes.total = -1;
 			} else packetBodyBytes = eventData;
 
 			request.bytes.receivedTotal += eventData.byteLength;
 			request.bytes.receivedBody += packetBodyBytes.byteLength;
 			request.bytes.body.push(packetBodyBytes);
 
-			if (isNaN(request.bytes.total) || request.bytes.receivedTotal >= request.bytes.total) {
+			if (request.bytes.receivedTotal >= request.bytes.total) {
 				var _networkingUtils;
 
 				var mergedBody = (_networkingUtils = this._networkingUtils).merge.apply(_networkingUtils, _toConsumableArray(request.bytes.body));

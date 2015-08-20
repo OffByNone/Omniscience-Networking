@@ -36,7 +36,6 @@ module.exports = {
         });
     },
     parseRange: function parseRange(rangeHeader) {
-        console.log(rangeHeader);
         if (!rangeHeader) return 0;
 
         var _rangeHeader$split = rangeHeader.split("=");

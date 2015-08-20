@@ -6,3 +6,10 @@ Networking components for Omniscience
 	Http Server
 	TCP Communicator
 	File Sharer
+
+
+To Build:
+
+	npm install
+	babel ./lib -d ./bin
+	Update FirefoxMain.js to point to correct BigBuckBunny path if testing in firefox
