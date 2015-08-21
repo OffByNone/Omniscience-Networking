@@ -7,29 +7,33 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var Constants = require('./Constants');
 
 var ResponseBuilder = (function () {
-  function ResponseBuilder(networkingUtils) {
-    _classCallCheck(this, ResponseBuilder);
+	function ResponseBuilder(networkingUtils) {
+		_classCallCheck(this, ResponseBuilder);
 
-    this._networkingUtils = networkingUtils;
-  }
+		this._networkingUtils = networkingUtils;
+	}
 
-  _createClass(ResponseBuilder, [{
-    key: 'createResponseHeaders',
-    value: function createResponseHeaders(requestHeaders, mimetype, contentLength) {
-      //todo: validate parameters
-      var contentType = mimetype;
-      var connection = requestHeaders['connection'] ? Constants.connectionKeepAlive : Constants.connectionClose;
-      var httpStatus = requestHeaders['range'] ? Constants.httpPartialStatus : Constants.httpOkStatus;
+	_createClass(ResponseBuilder, [{
+		key: 'createResponseHeaders',
+		value: function createResponseHeaders(requestHeaders, mimetype, contentLength, eTag) {
+			//todo: validate parameters
+			var contentType = mimetype;
+			var connection = requestHeaders['connection'] ? Constants.connectionKeepAlive : Constants.connectionClose;
+			var httpStatus = requestHeaders['range'] ? Constants.httpPartialStatus : Constants.httpOkStatus;
+			var date = new Date().toUTCString();
 
-      var headers = ['' + Constants.httpVersion + ' ' + httpStatus.code + ' ' + httpStatus.reason, 'Server: ' + Constants.serverName, 'Content-Type: ' + contentType, 'Connection: ' + connection, 'Content-Length: ' + contentLength, 'Accept-Ranges: bytes'];
+			var headers = ['' + Constants.httpVersion + ' ' + httpStatus.code + ' ' + httpStatus.reason, 'Server: ' + Constants.serverName, 'Content-Type: ' + contentType, 'Connection: ' + connection, 'Content-Length: ' + contentLength, 'ETag: ' + eTag, 'Date: ' + date, 'Accept-Ranges: bytes', 'Cache-Control: no-cache'];
 
-      return this._networkingUtils.toByteArray(headers.join(Constants.headerLineDelimiter) + Constants.headerLineDelimiter + Constants.headerLineDelimiter);
-    }
-  }]);
+			if (requestHeaders['range']) {
+				var range = this._networkingUtils.parseRange(requestHeaders['range']);
+				headers.push('Content-Range: bytes ' + range + '-' + contentLength + '/' + contentLength);
+			}
 
-  return ResponseBuilder;
+			return this._networkingUtils.toByteArray(headers.join(Constants.headerLineDelimiter) + Constants.headerLineDelimiter + Constants.headerLineDelimiter);
+		}
+	}]);
+
+	return ResponseBuilder;
 })();
 
 module.exports = ResponseBuilder;
-
-/*`Transfer-Encoding: chunked`*/
