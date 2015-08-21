@@ -3,7 +3,7 @@
   "version": "0.8.1",
   "description": "Networking For Omniscience",
   "title": "Omniscience Networking",
-  "main": "./FirefoxMain.js",
+  "main": "./bin/index.js",
   "author": "OffByNone",
   "license": "GNU GPL v3",
   "homepage": "https://github.com/offbynone/omniscience-networking",
