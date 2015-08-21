@@ -37,7 +37,7 @@ var HttpRequestHandler = (function () {
 					return;
 				}
 
-				packetBodyBytes = this._networkingUtils.toByteArray(body);
+				packetBodyBytes = this._networkingUtils.toBuffer(body);
 
 				request.headers = metadata.headers;
 				request.parameters = metadata.parameters;
@@ -50,11 +50,12 @@ var HttpRequestHandler = (function () {
 			request.bytes.receivedBody += packetBodyBytes.byteLength;
 			request.bytes.body.push(packetBodyBytes);
 
-			if (request.bytes.receivedTotal >= request.bytes.total) {
+			if (request.bytes.receivedBody >= request.bytes.total) {
 				var _networkingUtils;
 
 				var mergedBody = (_networkingUtils = this._networkingUtils).merge.apply(_networkingUtils, _toConsumableArray(request.bytes.body));
 				request.body = this._networkingUtils.toString(mergedBody);
+				request.bytes.receivedTotal = 0; //reset back to 0 so we can handle a new request over the same connection.
 				success(request);
 			}
 		}
