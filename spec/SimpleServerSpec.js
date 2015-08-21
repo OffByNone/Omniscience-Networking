@@ -1,9 +1,9 @@
 require("babel/register");
 
 const Constants = require('../lib/Constants');
-const FileSharer = require("../lib/FileSharer");
+const SimpleServer = require("../lib/SimpleServer");
 
-describe("FileSharer", function () {
+describe("SimpleServer", function () {
 	var _sut;
 	var _mockHttpServer;
 	var _mockUrlProvider;
@@ -12,9 +12,9 @@ describe("FileSharer", function () {
 		_mockHttpServer = {};
 		_mockUrlProvider = {};
 		_mockMd5 = jasmine.createSpy("mockMd5");
-		_sut = new FileSharer(_mockHttpServer, _mockUrlProvider, _mockMd5);
+		_sut = new SimpleServer(_mockHttpServer, _mockUrlProvider, _mockMd5);
 	});
-	describe("shareFile", function () {
+	describe("registerFile", function () {
 		it("should register the file with the server and return the serverPath when the file is local", function () {
 			//arrange
 			var filePath = "path to my file";

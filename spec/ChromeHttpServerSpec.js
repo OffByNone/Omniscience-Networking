@@ -1,10 +1,10 @@
 require("babel/register");
 
 const Constants = require('../lib/Constants');
-const HttpServer = require("../lib/HttpServer");
+const HttpServer = require("../lib/Chrome/HttpServer");
 const HttpRequest = require("../lib/HttpRequest");
 
-describe("HttpServer", function () {
+describe("ChromeHttpServer", function () {
 	var _sut;
 	var _mockTCPSocket;
 	var _mockUrlProvider;
