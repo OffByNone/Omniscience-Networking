@@ -23,8 +23,9 @@
 	},
 	"devDependencies": {
 		"babel": "^5.8.21",
-		"eslint": "^1.1.0",
-		"jasmine": "^2.3.2"
+		"eslint": "^1.2.1",
+		"jasmine": "^2.3.2",
+		"jpm": "^1.0.1"
 	},
 	"dependencies": {
 		"omniscience-sdk-resolver": "offbynone/omniscience-sdk-resolver",
