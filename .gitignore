@@ -1,7 +1,5 @@
 # Windows image file caches
-Thumbs.db
-ehthumbs.db
-
+*.db
 # Folder config file
 Desktop.ini
 
@@ -43,4 +41,5 @@ Temporary Items
 .apdisk
 
 #node
-node_modules/
+/node_modules/
+/bin/
