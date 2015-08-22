@@ -3,13 +3,3 @@
 [![David](https://img.shields.io/david/dev/OffByNone/Omniscience-Networking.svg?style=flat-square)](https://david-dm.org/offbynone/omniscience-networking#info=devDependencies)
 
 Networking components for Omniscience
-	Http Server
-	TCP Communicator
-	File Sharer
-
-
-To Build:
-
-	npm install
-	babel ./lib -d ./bin
-	Update FirefoxMain.js to point to correct BigBuckBunny path if testing in firefox
