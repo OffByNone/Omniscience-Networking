@@ -48,3 +48,4 @@ var HttpResponder = (function () {
 })();
 
 module.exports = HttpResponder;
+//# sourceMappingURL=HttpResponder.js.map

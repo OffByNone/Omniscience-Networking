@@ -159,3 +159,4 @@ var HttpServer = (function () {
 })();
 
 module.exports = HttpServer;
+//# sourceMappingURL=HttpServer.js.map

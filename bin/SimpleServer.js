@@ -54,3 +54,4 @@ var SimpleServer = (function () {
 })();
 
 module.exports = SimpleServer;
+//# sourceMappingURL=SimpleServer.js.map

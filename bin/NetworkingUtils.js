@@ -36,22 +36,17 @@ module.exports = {
         });
     },
     parseRange: function parseRange(rangeHeader) {
-        if (!rangeHeader) return 0;
+        if (!rangeHeader) return [0, null];
 
         var _rangeHeader$split = rangeHeader.split("=");
 
         var _rangeHeader$split2 = _slicedToArray(_rangeHeader$split, 2);
 
         var rangeType = _rangeHeader$split2[0];
-        var offsetPlusDash = _rangeHeader$split2[1];
+        var startEnd = _rangeHeader$split2[1];
 
-        if (rangeType.toLowerCase() !== "bytes") return 0;
-
-        return Number(offsetPlusDash.replace("-", ""));
-    },
-    offsetBytes: function offsetBytes(offset, fileBytes) {
-        if (!offset || offset <= 0) return fileBytes;
-        return fileBytes.subarray(offset);
+        if (rangeType.toLowerCase() !== "bytes") return [0, null];
+        return startEnd.split("-"); //returns [start,end]
     },
 
     /* untestable */
@@ -60,3 +55,4 @@ module.exports = {
         return ArrayBuffer.isView(obj);
     }
 };
+//# sourceMappingURL=NetworkingUtils.js.map

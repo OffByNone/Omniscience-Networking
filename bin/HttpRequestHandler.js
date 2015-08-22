@@ -65,3 +65,4 @@ var HttpRequestHandler = (function () {
 })();
 
 module.exports = HttpRequestHandler;
+//# sourceMappingURL=HttpRequestHandler.js.map

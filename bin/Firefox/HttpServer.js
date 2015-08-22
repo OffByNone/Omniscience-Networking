@@ -103,3 +103,4 @@ module.exports = HttpServer;
 /* if (request.socket.isOpen())
  * this._httpResponder.sendTimeoutResponse(request.socket);
  */
+//# sourceMappingURL=HttpServer.js.map

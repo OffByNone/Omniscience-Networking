@@ -20,3 +20,4 @@ var HttpRequest = function HttpRequest() {
 };
 
 module.exports = HttpRequest;
+//# sourceMappingURL=HttpRequest.js.map

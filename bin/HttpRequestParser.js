@@ -97,3 +97,4 @@ var HttpRequestParser = (function () {
 })();
 
 module.exports = HttpRequestParser;
+//# sourceMappingURL=HttpRequestParser.js.map
