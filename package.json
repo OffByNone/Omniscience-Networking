@@ -32,12 +32,12 @@
 		"omniscience-utilities": "offbynone/omniscience-utilities"
 	},
 	"scripts": {
-		"lint": "./node_modules/.bin/eslint",
-		"build": "./node_modules/.bin/babel ./lib --out-dir ./bin -s",
-		"post": "./node_modules/.bin/jpm post --post-url=http://127.0.0.1:7999",
+		"lint": ".\\node_modules\\.bin\\eslint",
+		"build": ".\\node_modules\\.bin\\babel ./lib --out-dir ./bin -s",
+		"post": ".\\node_modules\\.bin\\jpm post --post-url=http://127.0.0.1:7999",
 		"buildpost": "npm run build && npm run post",
-		"compile": "npm run build && ./node_modules/.bin/jpm xpi",
-		"install": "./node_modules/.bin/babel ./lib --out-dir ./bin -s",
-		"test": "./node_modules/.bin/jasmine"
+		"compile": "npm run build && .\\node_modules\\.bin\\jpm xpi",
+		"install": ".\\node_modules\\.bin\\babel ./lib --out-dir ./bin -s",
+		"test": ".\\node_modules\\.bin\\jasmine"
 	}
 }

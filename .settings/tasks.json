@@ -8,7 +8,7 @@
 
 {
 	"version": "0.1.0",
-	"command": "babel",
+	"command": ".\\node_modules\\.bin\\babel",
 	"isShellCommand": true,
 	"tasks": [
 		{
