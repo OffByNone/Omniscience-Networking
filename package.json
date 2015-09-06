@@ -28,8 +28,8 @@
 		"jpm": "^1.0.1"
 	},
 	"dependencies": {
-		"omniscience-sdk-resolver": "offbynone/omniscience-sdk-resolver",
-		"omniscience-utilities": "offbynone/omniscience-utilities"
+		"omniscience-sdk-resolver": "offbynone/omniscience-sdk-resolver#Dev",
+		"omniscience-utilities": "offbynone/omniscience-utilities#Dev"
 	},
 	"scripts": {
 		"lint": "eslint",
