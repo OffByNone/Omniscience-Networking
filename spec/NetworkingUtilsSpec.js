@@ -18,7 +18,7 @@ describe("NetworkingUtils", function () {
 			spyOn(_sut, 'toByteArray').and.returnValue(objectWithBuffer);
 			//act
 			var actual = _sut.toBuffer(convertThis);
-			
+
 			//assert
 			expect(actual).toBe(myBuffer);
 		});
@@ -30,7 +30,7 @@ describe("NetworkingUtils", function () {
 
 			//act
 			var actual = _sut.toBuffer(convertThis);
-			
+
 			//assert
 			expect(actual).toBe(convertThis.buffer);
 		});
@@ -43,91 +43,43 @@ describe("NetworkingUtils", function () {
 				_sut.toBuffer(convertThis);
 				fail("error should have been throw");
 			}
-			catch (e) { 
+			catch (e) {
 				expect(e.message).toBe("argument must be of type string or Uint8Array");
 			}
-			
-		});		
+
+		});
 	});
 	describe("parseRange", function () {
 		it("should return 0 when rangeHeader is null", function () {
 			//arrange
 			var rangeHeader = null;
-			
+
 			//act
 			var actual = _sut.parseRange(rangeHeader);
-			
+
 			//assert
-			expect(actual).toBe(0);
+			expect(actual).toEqual([0, null]);
 		});
 		it("should return 0 when rangeHeader type is not equal to bytes", function () {
 			//arrange
 			var rangeHeader = "not bytes=doesnt matter";
-			
+
 			//act
 			var actual = _sut.parseRange(rangeHeader);
-			
+
 			//assert
-			expect(actual).toBe(0);
-		});
-		it("should return absolute value of byte offset", function () {
-			//arrange
-			var byteOffset = -120;
-			var rangeHeader = "bytes=" + byteOffset;
-			
-			//act
-			var actual = _sut.parseRange(rangeHeader);
-			
-			//assert
-			expect(actual).toBe(Math.abs(byteOffset));
+			expect(actual).toEqual([0, null]);
 		});
 		it("should return absolute value of byte offset", function () {
 			//arrange
 			var byteOffset = 120;
 			var rangeHeader = "bytes=" + byteOffset;
-			
+
 			//act
 			var actual = _sut.parseRange(rangeHeader);
-			
+
 			//assert
-			expect(actual).toBe(byteOffset);
-		});
-	});
-	describe("offsetBytes", function () {
-		it("should return fileBytes when offset is null", function () {
-			//arrange
-			var offset = null;
-			var fileBytes = 10;
-			
-			//act
-			var actual = _sut.offsetBytes(offset, fileBytes);
-			
-			//assert
-			expect(actual).toBe(fileBytes);
-		});
-		it("should return fileBytes when offset is 0", function () {
-			//arrange
-			var offset = 0;
-			var fileBytes = 10;
-			
-			//act
-			var actual = _sut.offsetBytes(offset, fileBytes);
-			
-			//assert
-			expect(actual).toBe(fileBytes);
-		});
-		it("should return fileBytes starting at the index equal to offset when offset is greater than 0", function () {
-			//arrange
-			var offset = 2;
-			var buffer = new ArrayBuffer(8);
-			var fileBytes = new Uint8Array(buffer);
-			fileBytes.set([1, 2, 3, 4, 5, 6, 7]);
-			
-			//act
-			var actual = _sut.offsetBytes(offset, fileBytes);
-			
-			//assert
-			expect(actual).toEqual(fileBytes.subarray(offset));
+			expect(actual).toEqual([byteOffset.toString()]);
 		});
 	});
 });
